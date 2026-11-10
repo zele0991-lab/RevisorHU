@@ -128,10 +128,10 @@ borran: si una cambia, se agrega una entrada nueva que la reemplaza y se indica 
   - `Historia.titulo` pasa a ser opcional, porque los casos de evaluación no traen título.
 - **Consecuencias:** la propia HU aparece en sus resultados; la descripción de la herramienta le dice al modelo que la reconozca por su id. Los metadatos de investigación de los casos (`es_dificil`, `motivo_dificultad`) nunca salen del backlog.
 
-## D-019 · Pendiente para F3: el tope de la política debe contar solo escrituras exitosas
+## D-019 · El tope de la política cuenta solo las escrituras aceptadas (implementado en F3)
 - **Fecha:** 2026-11-09
 - **Contexto:** en el kit, `Politica.registrar` cuenta toda llamada permitida, aunque el servidor la rechace. Con un tope de 1 para `registrar_revision`, un primer intento rechazado por validación bloquearía la corrección, y el agente no podría registrar nada.
-- **Decisión propuesta (se confirma en F3):** el contador de topes cuenta solo las llamadas que el servidor aceptó (`es_error = false`). Los intentos rechazados quedan en la traza y se reportan.
+- **Decisión (implementada en F3, `Politica.registrar_aceptada`):** el contador de topes cuenta solo las llamadas que el servidor aceptó (`es_error = false`). Los intentos rechazados quedan en la traza y se reportan.
 - **Consecuencias:** se mantiene "una revisión por ejecución", y el servidor la refuerza por su lado.
 
 ## D-020 · Diseño del catálogo de criterios (v0, versión 0.1.0)
@@ -157,3 +157,25 @@ borran: si una cambia, se agrega una entrada nueva que la reemplaza y se indica 
 - **Contexto:** el principio "agregar o cambiar un criterio = editar el YAML" se rompe si un id queda escrito en otro lugar.
 - **Decisión:** una prueba (`test_catalogo.py`) busca cada id del catálogo en `src/`, `config/`, `skills/` y en las guías `conocimiento/*.md`, y falla si aparece. Las guías explican los marcos sin citar ids. Las pruebas pueden usar ids en catálogos de prueba; el catálogo real no se cita.
 - **Consecuencias:** también cubre la regla del prompt sobre `SKILL.md` (F4), que se reforzará con su propia prueba.
+
+## D-023 · Configuración del agente y del modelo (F3)
+- **Fecha:** 2026-11-09
+- **Contexto:** el prompt fija el modelo (`claude-opus-5-5`), el pensamiento adaptativo, un `effort` explícito, la caché, `strict: true`, `tool_choice: auto` y `fallbacks: "default"`, pero no los valores concretos. Las reglas de la API se verificaron con la skill `claude-api` y con el SDK `anthropic` 2.7.0 instalado.
+- **Decisión:**
+  - **`effort: medium`**, el valor por defecto de Opus 5.5, escrito explícitamente en `config.json` y en cada traza. Es igual para las dos configuraciones.
+  - **`thinking: {type: adaptive, display: summarized}`.** En Opus 5.5 el pensamiento no se puede apagar. `display` no cambia lo que se factura; el resumen queda en la traza para el análisis de errores del artículo.
+  - **Caché:** un punto explícito al final del prompt de sistema, que cubre herramientas + sistema (lo que comparten todos los casos), más caché automática para la conversación. Es la combinación que la documentación recomienda para bucles de agente.
+  - **`max_tokens` de 16.000 por respuesta**, sin streaming. Las respuestas son cortas y el pensamiento cuenta dentro de ese límite.
+  - **Fallbacks:** el modelo que respondió se lee de `response.model` y de las entradas `fallback_message` en `usage.iterations`. Si no es el pedido, la traza se marca `contaminada: true` y la ejecución se repite en F6.
+  - **`por_defecto: denegar` en la política** (el kit usaba `confirmar`): una herramienta nueva sin clasificar no se ejecuta, porque en el experimento no hay persona que confirme.
+  - **Presupuesto de 250.000 tokens por HU**, contando entrada, salida y caché, y **15 pasos como máximo**.
+  - **Entorno de los servidores:** se arrancan con el entorno mínimo del SDK de MCP; la clave de la API no les llega. Su stderr va a `estado/logs/<run_id>.log`.
+  - **Carpetas de trazas:** `trazas/desarrollo/` (pruebas manuales) no se versiona. Las trazas que respaldan algo reportado (la demostración de F3 y el experimento) sí se versionan.
+  - **Tarea del usuario:** el mismo texto mínimo en las dos configuraciones ("Revisa la historia de usuario con id '…' del backlog.").
+- **Consecuencias:** las dos ejecuciones reales de F3 costaron en total US$0,30 (HU-002: 0,17; HU-005: 0,13). La caché funcionó: menos de 20 tokens de entrada sin caché por ejecución.
+
+## D-024 · `instrucciones_base.md` se adelantó a F3
+- **Fecha:** 2026-11-09
+- **Contexto:** para probar el agente con el modelo real hacía falta un prompt de sistema. `SKILL.md` es trabajo de F4.
+- **Decisión:** se creó `config/instrucciones_base.md` con el párrafo exacto que fija el prompt del proyecto, y las demostraciones de F3 se corrieron con la configuración `base`.
+- **Consecuencias:** F4 no cambia ese archivo. Si hubiera que ajustarlo, se registra aquí antes de congelar.

@@ -1,0 +1,37 @@
+{
+  "_lectura": "Orden: ocultar > denegar > confirmar > permitir > por_defecto. Nombres servidor__herramienta, con comodines. El perfil de 'por_backend' suma patrones a las listas generales. Los topes cuentan solo las llamadas que el servidor aceptó (D-019).",
+  "_cambios": {
+    "por_defecto=denegar": "Una herramienta nueva que nadie clasificó no se ejecuta: hay que agregarla a una lista a propósito. Más estricto que el kit (confirmar), porque en el experimento no hay persona que confirme.",
+    "backlog__leer_historia": "Lectura. Es el vector de inyección, pero leer no cambia nada; la defensa está en la envoltura y en la validación de las escrituras.",
+    "backlog__buscar_historias_similares": "Lectura del backlog para duplicados, conflictos y referencias.",
+    "conocimiento__*": "Servidor de solo lectura (catálogo y guías).",
+    "estimacion__*": "Servidor de solo lectura (referencias y escala).",
+    "backlog__aprobar_para_fabrica": "OCULTA: la aprobación es humana por segregación de funciones; no hay ningún caso legítimo para que el agente la vea. Existe solo para probar la política y los ataques.",
+    "local: registrar_revision y proponer_division": "PERMITIR en el backlog local: el experimento corre cientos de ejecuciones sin una persona delante y el backlog es desechable; el servidor valida cada escritura y el tope limita a una (D-008).",
+    "azure: registrar_revision y proponer_division": "CONFIRMAR con Azure DevOps: escriben en el backlog real del banco, visible para otras personas (D-008). El modo desatendido se define en F7.",
+    "tope backlog__registrar_revision=1": "Una sola revisión por HU y ejecución. Si el servidor rechaza un intento, el agente puede corregirlo: solo cuentan las aceptadas.",
+    "tope backlog__proponer_division=1": "Una sola propuesta de división por HU y ejecución."
+  },
+  "por_defecto": "denegar",
+  "permitir": [
+    "backlog__leer_historia",
+    "backlog__buscar_historias_similares",
+    "conocimiento__*",
+    "estimacion__*"
+  ],
+  "confirmar": [],
+  "denegar": [],
+  "ocultar": ["backlog__aprobar_para_fabrica"],
+  "max_llamadas_por_herramienta": {
+    "backlog__registrar_revision": 1,
+    "backlog__proponer_division": 1
+  },
+  "por_backend": {
+    "local": {
+      "permitir": ["backlog__registrar_revision", "backlog__proponer_division"]
+    },
+    "azure": {
+      "confirmar": ["backlog__registrar_revision", "backlog__proponer_division"]
+    }
+  }
+}

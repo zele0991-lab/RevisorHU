@@ -20,7 +20,7 @@ El agente recibe una historia de usuario (HU) y hace lo siguiente:
 | F0 | Andamiaje: estructura, reglas, documentación, puerto de backlog | ✅ |
 | F1 | Backlog: `BacklogLocal` y `servidor_backlog` con su validación | ✅ |
 | F2 | Catálogo de criterios, `servidor_conocimiento` y `servidor_estimacion` | ✅ |
-| F3 | Agente: bucle con el SDK, política, trazas, modo simulado y CLI `revisar` | pendiente |
+| F3 | Agente: bucle con el SDK, política, trazas, modo simulado y CLI `revisar` | ✅ |
 | F4 | `SKILL.md` y línea base | pendiente |
 | F5 | Conjunto de evaluación, ataques, etiquetado y kappa | pendiente |
 | F6 | Experimento, métricas y comando de reproducción | pendiente |
@@ -44,6 +44,24 @@ python -m pytest
 ```
 
 Las pruebas no usan la red ni la API.
+
+## Revisar una historia
+
+Desde la raíz del repositorio, con el entorno virtual activo:
+
+```powershell
+# Sin clave ni costo: un guion reemplaza al modelo (muestra el bucle, la política y la traza)
+revisar --caso HU-002 --config base --simulado
+
+# Modelo real (claude-opus-5-5): cuesta dinero, alrededor de US$0,15–0,35 por HU
+revisar --caso HU-002 --config base
+```
+
+- `--config skill` usa `skills/revisor-hu/SKILL.md` (F4); `--config base` usa `config/instrucciones_base.md`.
+- La clave se lee de `ANTHROPIC_API_KEY` (entorno o `.env`) y nunca se escribe en la traza.
+- Cada ejecución deja una traza JSONL en `trazas/desarrollo/` (no se versiona). Para un resumen, usa el lector del kit: `python ../kit-clase3/agente/leer_traza.py trazas/desarrollo/*.jsonl`.
+- El código de salida es 0 solo si el agente terminó por sí mismo y registró una revisión.
+- El modelo, el `effort`, los límites, la política y los archivos de datos están en `config/config.json`.
 
 ## Estructura
 

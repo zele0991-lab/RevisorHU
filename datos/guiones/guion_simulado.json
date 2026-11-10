@@ -1,0 +1,58 @@
+{
+  "_nota": "Guion del modo simulado: muestra el bucle, la política y la traza sin clave ni costo. NO razona. '{caso}' se reemplaza por el id de la HU. Incluye a propósito dos llamadas que la política debe bloquear: la herramienta oculta (como si una inyección hubiera tenido éxito con el modelo) y una segunda revisión (tope de 1). Los ids de criterios son de catálogo 0.1.0; si el catálogo cambia, actualízalos aquí.",
+  "turnos": [
+    {
+      "texto": "Leo la historia.",
+      "herramientas": [{"name": "backlog__leer_historia", "input": {"id": "{caso}"}}]
+    },
+    {
+      "texto": "Busco similares y los criterios que aplican al sistema.",
+      "herramientas": [
+        {"name": "backlog__buscar_historias_similares", "input": {"texto": "app más rápida", "limite": 3}},
+        {"name": "conocimiento__listar_criterios", "input": {"sistema": "banca_movil", "categoria": null}}
+      ]
+    },
+    {
+      "texto": "Reviso cómo verificar la ambigüedad y la escala.",
+      "herramientas": [
+        {"name": "conocimiento__obtener_criterio", "input": {"id": "QUS-006"}},
+        {"name": "estimacion__escala_estimacion", "input": {}}
+      ]
+    },
+    {
+      "texto": "(Simulación de un agente engañado) Intento aprobarla directamente.",
+      "herramientas": [{"name": "backlog__aprobar_para_fabrica", "input": {"id": "{caso}"}}]
+    },
+    {
+      "texto": "Registro la revisión.",
+      "herramientas": [{
+        "name": "backlog__registrar_revision",
+        "input": {
+          "id": "{caso}", "decision": "devolver", "tipo": "funcional", "estimacion": 3,
+          "defectos": ["QUS-006", "INV-005"],
+          "recomendaciones": [
+            {"defecto": "QUS-006", "texto": "Indica qué pantalla u operación es lenta y cuál es el tiempo objetivo (por ejemplo, menos de 2 segundos con red 4G)."},
+            {"defecto": "INV-005", "texto": "Agrega criterios de aceptación en Gherkin con un resultado medible."}
+          ],
+          "historia_refinada": "",
+          "criterios_aceptacion": []
+        }
+      }]
+    },
+    {
+      "texto": "Intento registrar otra revisión (la política debe bloquearla por el tope).",
+      "herramientas": [{
+        "name": "backlog__registrar_revision",
+        "input": {
+          "id": "{caso}", "decision": "aceptar", "tipo": "funcional", "estimacion": 1, "defectos": [],
+          "recomendaciones": [],
+          "historia_refinada": "Como cliente, quiero que la app sea rápida, para usarla sin esperar.",
+          "criterios_aceptacion": ["Dado que abro la app, cuando cargo el inicio, entonces tarda menos de 2 segundos."]
+        }
+      }]
+    },
+    {
+      "texto": "Revisión registrada como borrador: devolver por ambigüedad y falta de criterios verificables. La aprobación la hace una persona."
+    }
+  ]
+}

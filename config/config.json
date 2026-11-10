@@ -1,0 +1,49 @@
+{
+  "_lectura": "Configuración del agente. Las dos configuraciones del experimento (skill y base) comparten TODO excepto el archivo de 'prompts'. Las rutas son relativas a la raíz del repositorio.",
+  "modelo": "claude-opus-5-5",
+  "effort": "medium",
+  "fallbacks": "default",
+  "max_tokens_por_respuesta": 16000,
+  "limites": {
+    "max_pasos": 15,
+    "presupuesto_tokens": 250000
+  },
+  "backend": "local",
+  "politica": "config/politica.json",
+  "prompts": {
+    "skill": "skills/revisor-hu/SKILL.md",
+    "base": "config/instrucciones_base.md"
+  },
+  "tarea": "Revisa la historia de usuario con id '{caso}' del backlog.",
+  "envolver_resultados": true,
+  "catalogo": "conocimiento/criterios.yaml",
+  "guias": "conocimiento",
+  "historias": ["datos/ejemplo/backlog_ejemplo.json"],
+  "referencias": "datos/ejemplo/referencias_ejemplo.jsonl",
+  "guion_simulado": "datos/guiones/guion_simulado.json",
+  "carpeta_trazas": "trazas/desarrollo",
+  "carpeta_estado": "estado",
+  "_precios": "USD por millón de tokens de claude-opus-5-5 (skill claude-api, consultada el 2026-11-09). La escritura en caché de 5 minutos cuesta 1,25 veces la entrada. Solo se usan para estimar costos; la factura real manda.",
+  "precios_usd_por_millon": {
+    "entrada": 4.0,
+    "salida": 20.0,
+    "cache_lectura": 0.20,
+    "cache_escritura": 5.0
+  },
+  "servidores": [
+    {
+      "nombre": "backlog",
+      "comando": ["python", "-m", "revisor.servidores.servidor_backlog", "--historias", "{historias}",
+                  "--estado", "{estado}", "--marca", "{run_id}", "--catalogo", "{catalogo}"]
+    },
+    {
+      "nombre": "conocimiento",
+      "comando": ["python", "-m", "revisor.servidores.servidor_conocimiento", "--catalogo", "{catalogo}",
+                  "--guias", "{guias}"]
+    },
+    {
+      "nombre": "estimacion",
+      "comando": ["python", "-m", "revisor.servidores.servidor_estimacion", "--referencias", "{referencias}"]
+    }
+  ]
+}

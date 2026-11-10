@@ -21,3 +21,6 @@ Thumbs.db
 
 # Borradores que escriben los servidores al probarlos a mano (la evidencia del experimento son las trazas)
 estado/
+
+# Trazas de desarrollo (pruebas manuales). Las trazas del experimento van en otras carpetas y sí se versionan (D-009).
+trazas/desarrollo/
