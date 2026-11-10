@@ -323,12 +323,14 @@ def test_un_backend_que_prohibe_aprobar_devuelve_error(backlog, reglas):
 
 
 # ===================================================================== arranque
-def test_sin_catalogo_el_servidor_no_arranca(capsys):
+def test_con_catalogo_invalido_el_servidor_no_arranca(tmp_path, capsys):
     from conftest import BACKLOG_EJEMPLO
     from revisor.servidores.servidor_backlog import main
 
-    assert main(["--historias", str(BACKLOG_EJEMPLO)]) == 2
-    assert "F2" in capsys.readouterr().err
+    malo = tmp_path / "criterios.yaml"
+    malo.write_text("version: '1.0.0'\n", encoding="utf-8")
+    assert main(["--historias", str(BACKLOG_EJEMPLO), "--catalogo", str(malo)]) == 2
+    assert "Catálogo de criterios inválido" in capsys.readouterr().err
 
 
 def test_con_backlog_invalido_el_servidor_no_arranca(tmp_path, capsys):
@@ -336,3 +338,22 @@ def test_con_backlog_invalido_el_servidor_no_arranca(tmp_path, capsys):
 
     assert main(["--historias", str(tmp_path / "no_existe.json")]) == 2
     assert "No existe el archivo" in capsys.readouterr().err
+
+
+def test_con_el_catalogo_real_el_servidor_usa_sus_tipos_y_defectos(tmp_path):
+    """La conexión de F2: los defectos válidos de registrar_revision salen del catálogo real."""
+    from conftest import BACKLOG_EJEMPLO, RAIZ
+    from revisor.conocimiento.catalogo import cargar_catalogo
+    from revisor.servidores.servidor_backlog import construir
+
+    srv = construir(["--historias", str(BACKLOG_EJEMPLO), "--estado", str(tmp_path / "e")])
+    catalogo = cargar_catalogo(RAIZ / "conocimiento" / "criterios.yaml")
+    bm = [c.id for c in catalogo.aplicables("banca_movil", "banca_movil")][0]
+    general = catalogo.aplicables("todos")[0].id
+    recs = [{"defecto": bm, "texto": "Definir el control."}]
+    # Un defecto de banca_movil vale para una HU de banca_movil…
+    r = llamar(srv, "registrar_revision", _devolver(defectos=[bm, general], recomendaciones=recs))
+    assert not r.es_error, r.texto
+    # …pero no para una HU de core.
+    r = llamar(srv, "registrar_revision", _devolver(id="HU-007", defectos=[bm], recomendaciones=recs))
+    assert r.es_error and "no son criterios activos que apliquen al sistema 'core'" in r.texto

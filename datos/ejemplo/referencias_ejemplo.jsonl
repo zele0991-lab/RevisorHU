@@ -1,0 +1,12 @@
+{"id": "REF-001", "texto": "Como cliente, quiero ver el saldo de mis cuentas en la pantalla principal, para saber cuánto dinero tengo.", "story_points": 2, "proyecto": "ejemplo", "fuente": "sintetico"}
+{"id": "REF-002", "texto": "Como cliente, quiero transferir dinero a cuentas de terceros del mismo banco, para pagar a otras personas.", "story_points": 5, "proyecto": "ejemplo", "fuente": "sintetico"}
+{"id": "REF-003", "texto": "Como cliente, quiero ingresar a la app con huella dactilar, para no escribir la contraseña.", "story_points": 5, "proyecto": "ejemplo", "fuente": "sintetico"}
+{"id": "REF-004", "texto": "Como cliente, quiero descargar el comprobante de una transferencia en PDF, para enviarlo a quien le pagué.", "story_points": 3, "proyecto": "ejemplo", "fuente": "sintetico"}
+{"id": "REF-005", "texto": "Como cliente, quiero recibir una notificación push por cada movimiento, para detectar cargos no reconocidos.", "story_points": 8, "proyecto": "ejemplo", "fuente": "sintetico"}
+{"id": "REF-006", "texto": "Como cliente, quiero cambiar el texto del botón de ingreso, para que sea más claro.", "story_points": 1, "proyecto": "ejemplo", "fuente": "sintetico"}
+{"id": "REF-007", "texto": "Como cliente, quiero bloquear temporalmente mi tarjeta de débito desde la app, para evitar cargos si la pierdo.", "story_points": 3, "proyecto": "ejemplo", "fuente": "sintetico"}
+{"id": "REF-008", "texto": "Como cliente, quiero una sección de inversiones con fondos, bonos y un simulador de rendimiento, para invertir desde el celular.", "story_points": 20, "proyecto": "ejemplo", "fuente": "sintetico"}
+{"id": "REF-009", "texto": "Como cliente, quiero filtrar el historial de movimientos por fecha y monto, para encontrar un pago rápido.", "story_points": 4, "proyecto": "ejemplo", "fuente": "sintetico"}
+{"id": "REF-010", "texto": "Como cajero, quiero consultar el saldo disponible de una cuenta, para responder al cliente en ventanilla.", "story_points": 3, "proyecto": "ejemplo", "fuente": "sintetico"}
+{"id": "REF-011", "texto": "Como cliente, quiero pagar servicios públicos desde la app, para no ir a una agencia.", "story_points": 8, "proyecto": "ejemplo", "fuente": "sintetico"}
+{"id": "REF-012", "texto": "Como cliente, quiero programar transferencias recurrentes mensuales, para pagar el alquiler sin acordarme.", "story_points": 13, "proyecto": "ejemplo", "fuente": "sintetico"}

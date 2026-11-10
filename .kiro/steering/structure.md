@@ -33,7 +33,7 @@ inclusion: always
 - `conocimiento/criterios.yaml` es la **única fuente de verdad** de los criterios y de la lista de tipos de HU (por ahora solo `funcional`). Lo carga y valida solo `catalogo.py`; los servidores, la herramienta de etiquetado y las métricas lo consumen de ahí.
 - Agregar, cambiar o retirar un criterio = editar el YAML y nada más. **Nunca** escribas ids de criterios en código Python, en `SKILL.md` ni en la política.
 - Los ids nunca se borran ni se reutilizan: un criterio se marca `obsoleto` con `reemplazado_por`.
-- Catálogo inválido ⇒ el sistema no arranca, con un mensaje que dice qué criterio y qué campo fallan.
+- Catálogo inválido ⇒ el sistema no arranca, con un mensaje que dice qué criterio y qué campo fallan. Las `categorias`, los `sistemas` y los `tipos_hu` se declaran en la cabecera del YAML; `todos` es reservado.
 - Cada HU trae su `sistema`; solo aplican los criterios con `aplica_a` igual a `todos` o a ese sistema.
 - `SKILL.md` y `criterios.yaml` se congelan con un tag de git antes de etiquetar y correr el experimento.
 

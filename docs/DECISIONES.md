@@ -133,3 +133,27 @@ borran: si una cambia, se agrega una entrada nueva que la reemplaza y se indica 
 - **Contexto:** en el kit, `Politica.registrar` cuenta toda llamada permitida, aunque el servidor la rechace. Con un tope de 1 para `registrar_revision`, un primer intento rechazado por validación bloquearía la corrección, y el agente no podría registrar nada.
 - **Decisión propuesta (se confirma en F3):** el contador de topes cuenta solo las llamadas que el servidor aceptó (`es_error = false`). Los intentos rechazados quedan en la traza y se reportan.
 - **Consecuencias:** se mantiene "una revisión por ejecución", y el servidor la refuerza por su lado.
+
+## D-020 · Diseño del catálogo de criterios (v0, versión 0.1.0)
+- **Fecha:** 2026-11-09
+- **Contexto:** la sección 4.1 del prompt pide un catálogo con validación estricta, en el que los sistemas y las categorías se validen contra lo que dice el catálogo, no contra el código.
+- **Decisión:**
+  - **Cabecera con listas declaradas:** `categorias`, `sistemas` y `tipos_hu` se declaran en el YAML. Así un error de escritura (`aplica_a: [banca_movl]`) se detecta al cargar, en vez de dejar sin efecto el criterio sin avisar. Agregar un sistema o una categoría es editar la cabecera.
+  - **`todos` es un sistema válido en las consultas:** es el valor para una HU sin sistema mapeado (lo usará el conector de Azure DevOps en F7) y devuelve solo los criterios generales. No se puede declarar como sistema ni combinar con otros en `aplica_a`.
+  - **Validaciones adicionales al prompt:** se rechazan los campos desconocidos (detectan errores de escritura); un criterio activo no puede tener `reemplazado_por`; la cadena de reemplazos tiene que terminar en un criterio activo (sin ciclos).
+  - **Qué queda en el código:** solo la semántica fija del esquema: severidades (bloqueante, mayor, menor), estados (activo, obsoleto) y el formato del id (2 a 5 mayúsculas, guion, 3 dígitos).
+  - **Versión `0.1.0` (borrador):** el prompt pide congelar en `1.0.0` con un tag de git antes de etiquetar (F5).
+  - **Contenido v0:** 27 criterios. Son 17 generales (9 de QUS, 5 de INVEST, 3 de DoR) y 10 de banca móvil. No se solapan entre sí, para no confundir a los anotadores. `core` todavía no tiene criterios propios.
+- **Consecuencias:** las descripciones de `listar_criterios` y `registrar_revision` incluyen los sistemas, las categorías y los tipos del catálogo; si el catálogo cambia, cambia el texto de las herramientas. Eso queda registrado por el hash del catálogo en cada traza.
+
+## D-021 · Referencias de estimación sintéticas hasta F5
+- **Fecha:** 2026-11-09
+- **Contexto:** el subconjunto de TAWOS se descarga y construye en F5, pero `servidor_estimacion` se implementa en F2.
+- **Decisión:** `datos/ejemplo/referencias_ejemplo.jsonl` (12 HU sintéticas, marcadas `"fuente": "sintetico"`) se usa en las pruebas y en `.mcp.json` mientras tanto. En F5 se genera el archivo de TAWOS **sin** las 30 HU reservadas para medir la estimación (D-012), y la configuración del experimento apunta a ese archivo.
+- **Consecuencias:** ninguna corrida del experimento debe usar las referencias sintéticas. Se verificará en F6 con el hash del conjunto de datos de la traza.
+
+## D-022 · Ningún id de criterio fuera del YAML, ni siquiera en las guías
+- **Fecha:** 2026-11-09
+- **Contexto:** el principio "agregar o cambiar un criterio = editar el YAML" se rompe si un id queda escrito en otro lugar.
+- **Decisión:** una prueba (`test_catalogo.py`) busca cada id del catálogo en `src/`, `config/`, `skills/` y en las guías `conocimiento/*.md`, y falla si aparece. Las guías explican los marcos sin citar ids. Las pruebas pueden usar ids en catálogos de prueba; el catálogo real no se cita.
+- **Consecuencias:** también cubre la regla del prompt sobre `SKILL.md` (F4), que se reforzará con su propia prueba.

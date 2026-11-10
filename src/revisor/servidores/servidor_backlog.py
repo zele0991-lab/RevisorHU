@@ -43,6 +43,7 @@ from revisor.servidores.comun import (
     AVISO_NO_CONFIABLE,
     endurecer_esquemas,
     envolver_no_confiable,
+    errores_busqueda,
     rechazo,
 )
 
@@ -128,14 +129,7 @@ def crear_servidor(backlog: PuertoBacklog, reglas: FuenteReglas) -> MCPServer:
         texto: Annotated[str, Field(description="Texto a comparar, normalmente el de la HU que revisas. No vacío.")],
         limite: Annotated[int, Field(description="Cuántos resultados devolver, entre 1 y 10.")],
     ) -> str:
-        errores = []
-        if not texto.strip():
-            errores.append("texto: está vacío; pasa el texto de la HU (o una parte significativa).")
-        elif len(texto) > dominio.MAX_TEXTO_BUSQUEDA:
-            errores.append(f"texto: tiene {len(texto)} caracteres; el máximo es {dominio.MAX_TEXTO_BUSQUEDA}.")
-        minimo, maximo = dominio.LIMITE_SIMILARES
-        if not minimo <= limite <= maximo:
-            errores.append(f"limite: {limite} está fuera de rango; usa un entero entre {minimo} y {maximo}.")
+        errores = errores_busqueda(texto, limite, dominio.LIMITE_SIMILARES)
         if errores:
             raise rechazo("buscar_historias_similares", errores)
         try:
@@ -303,23 +297,36 @@ def crear_servidor(backlog: PuertoBacklog, reglas: FuenteReglas) -> MCPServer:
     return servidor
 
 
-def main(argv: list[str] | None = None) -> int:
+def construir(argv: list[str] | None = None) -> MCPServer:
+    """
+    Arma el servidor desde la línea de comandos. Separado de `main` para poder probar el
+    arranque (y sus fallos) sin abrir el canal stdio.
+    """
     from revisor.backlog.local import BacklogLocal
-    from revisor.conocimiento.fuente import cargar_fuente_reglas
+    from revisor.conocimiento.catalogo import RUTA_POR_DEFECTO, cargar_catalogo
 
     ap = argparse.ArgumentParser(description="Servidor MCP del backlog (stdio)")
     ap.add_argument("--historias", nargs="+", required=True, help="archivos .json o .jsonl con las HU")
     ap.add_argument("--estado", default="estado", help="carpeta donde se escriben los borradores")
     ap.add_argument("--marca", default=None, help="identifica los borradores de esta ejecución (run_id)")
+    ap.add_argument("--catalogo", default=str(RUTA_POR_DEFECTO), help="catálogo de criterios (YAML)")
     args = ap.parse_args(argv)
+    # El catálogo primero: si las reglas son inválidas, no tiene sentido cargar nada más.
+    catalogo = cargar_catalogo(args.catalogo)
+    backlog = BacklogLocal(args.historias, args.estado, marca=args.marca)
+    return crear_servidor(backlog, catalogo)
+
+
+def main(argv: list[str] | None = None) -> int:
+    from revisor.conocimiento.catalogo import CatalogoInvalido
+
     try:
-        backlog = BacklogLocal(args.historias, args.estado, marca=args.marca)
-        reglas = cargar_fuente_reglas()
-    except (ErrorBacklog, RuntimeError) as e:
+        servidor = construir(argv)
+    except (ErrorBacklog, CatalogoInvalido) as e:
         # stderr: en stdio, stdout es el canal del protocolo MCP.
         print(f"servidor_backlog no arranca: {e}", file=sys.stderr)
         return 2
-    crear_servidor(backlog, reglas).run()
+    servidor.run()
     return 0
 
 

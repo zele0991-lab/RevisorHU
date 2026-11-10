@@ -19,7 +19,7 @@ El agente recibe una historia de usuario (HU) y hace lo siguiente:
 |---|---|---|
 | F0 | Andamiaje: estructura, reglas, documentación, puerto de backlog | ✅ |
 | F1 | Backlog: `BacklogLocal` y `servidor_backlog` con su validación | ✅ |
-| F2 | Catálogo de criterios, `servidor_conocimiento` y `servidor_estimacion` | pendiente |
+| F2 | Catálogo de criterios, `servidor_conocimiento` y `servidor_estimacion` | ✅ |
 | F3 | Agente: bucle con el SDK, política, trazas, modo simulado y CLI `revisar` | pendiente |
 | F4 | `SKILL.md` y línea base | pendiente |
 | F5 | Conjunto de evaluación, ataques, etiquetado y kappa | pendiente |
@@ -63,7 +63,7 @@ docs/            propuesta, arquitectura, decisiones y bitácora de uso de IA
 
 Los tres servidores (`backlog`, `conocimiento` y `estimacion`) están registrados en `.mcp.json` (Claude Code) y en `.kiro/settings/mcp.json` (Kiro). Los dos usan el intérprete de `.venv`.
 
-> `servidor_backlog` está implementado (F1), pero solo arranca cuando exista el catálogo de criterios (F2): sin catálogo no hay lista de defectos válidos y, por diseño, el servidor no arranca con reglas a medias. `servidor_conocimiento` y `servidor_estimacion` llegan en F2.
+> Los tres servidores funcionan desde la raíz del repositorio con el backlog y las referencias **sintéticas** de `datos/ejemplo/`. Si el catálogo `conocimiento/criterios.yaml` es inválido, `backlog` y `conocimiento` no arrancan, a propósito: el error dice qué criterio y qué campo corregir.
 
 ## Documentación
 - [docs/propuesta.md](docs/propuesta.md): propuesta aprobada (H1). Es el contrato del proyecto.

@@ -59,6 +59,19 @@ AVISO_NO_CONFIABLE = (
 )
 
 
+def errores_busqueda(texto: str, limite: int, rango: tuple[int, int], max_texto: int = 5000) -> list[str]:
+    """Validación común de las búsquedas (texto no vacío y `limite` dentro del rango)."""
+    errores = []
+    if not texto.strip():
+        errores.append("texto: está vacío; pasa el texto de la HU (o una parte significativa).")
+    elif len(texto) > max_texto:
+        errores.append(f"texto: tiene {len(texto)} caracteres; el máximo es {max_texto}.")
+    minimo, maximo = rango
+    if not minimo <= limite <= maximo:
+        errores.append(f"limite: {limite} está fuera de rango; usa un entero entre {minimo} y {maximo}.")
+    return errores
+
+
 def rechazo(herramienta: str, errores: list[str]) -> ToolError:
     """Error con la lista completa de correcciones, para que el modelo corrija todo de una vez."""
     lineas = "\n".join(f"- {e}" for e in errores)

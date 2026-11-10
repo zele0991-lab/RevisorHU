@@ -2,15 +2,15 @@
   "mcpServers": {
     "backlog": {
       "command": ".venv/Scripts/python.exe",
-      "args": ["-m", "revisor.servidores.servidor_backlog", "--historias", "datos/ejemplo/backlog_ejemplo.json", "--estado", "estado"]
+      "args": ["-m", "revisor.servidores.servidor_backlog", "--historias", "datos/ejemplo/backlog_ejemplo.json", "--estado", "estado", "--catalogo", "conocimiento/criterios.yaml"]
     },
     "conocimiento": {
       "command": ".venv/Scripts/python.exe",
-      "args": ["-m", "revisor.servidores.servidor_conocimiento"]
+      "args": ["-m", "revisor.servidores.servidor_conocimiento", "--catalogo", "conocimiento/criterios.yaml", "--guias", "conocimiento"]
     },
     "estimacion": {
       "command": ".venv/Scripts/python.exe",
-      "args": ["-m", "revisor.servidores.servidor_estimacion"]
+      "args": ["-m", "revisor.servidores.servidor_estimacion", "--referencias", "datos/ejemplo/referencias_ejemplo.jsonl"]
     }
   }
 }
