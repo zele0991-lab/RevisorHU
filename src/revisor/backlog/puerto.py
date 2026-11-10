@@ -61,12 +61,25 @@ class Historia:
     """
 
     id: str
-    titulo: str
     texto: str
     sistema: str
     proyecto: str
+    titulo: str = ""  # opcional: los casos de evaluación (casos.jsonl) no traen título
     story_points: int | None = None
     criterios_aceptacion: str = ""
+
+
+@dataclass(frozen=True)
+class HistoriaSimilar:
+    """
+    Resultado de una búsqueda. `similitud` va de 0 a 1 (1 = texto prácticamente igual).
+
+    Es opcional porque un backend puede ordenar por relevancia sin dar un puntaje
+    (por ejemplo, una búsqueda de texto en Azure DevOps); en ese caso, `None`.
+    """
+
+    historia: Historia
+    similitud: float | None = None
 
 
 @dataclass(frozen=True)
@@ -104,9 +117,10 @@ class PuertoBacklog(ABC):
         """Devuelve la HU con su `sistema`. Lanza `HistoriaNoEncontrada` si el id no existe."""
 
     @abstractmethod
-    def buscar_similares(self, texto: str, limite: int) -> list[Historia]:
+    def buscar_similares(self, texto: str, limite: int) -> list[HistoriaSimilar]:
         """
         Devuelve hasta `limite` HU parecidas al texto, de la más a la menos parecida.
+        La propia HU puede aparecer en los resultados si su texto está en el backlog.
 
         Sirve para detectar duplicados y conflictos, y para dar referencias de estimación
         (por eso `Historia` trae `story_points` cuando los tiene).

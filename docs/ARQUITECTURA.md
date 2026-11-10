@@ -21,7 +21,7 @@ flowchart LR
 
     API[("API de Claude<br/>o modelo simulado")]
 
-    subgraph MCP["Servidores MCP propios (stdio, FastMCP)"]
+    subgraph MCP["Servidores MCP propios (stdio, MCPServer)"]
         SB["servidor_backlog<br/>leer · buscar · registrar · dividir<br/>(aprobar: oculta)"]
         SC["servidor_conocimiento<br/>listar_criterios · obtener_criterio · buscar_guia"]
         SE["servidor_estimacion<br/>historias_referencia · escala_estimacion"]

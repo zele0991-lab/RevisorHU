@@ -11,7 +11,7 @@ inclusion: always
 - SDK `anthropic` con un **bucle manual** de tool use (no el Tool Runner): la política y la traza se aplican en cada llamada. No adivines firmas: consulta la documentación oficial.
 - Modelo en `config/config.json` (`claude-opus-5-5` por defecto). Pensamiento adaptativo y `effort` explícito, iguales en las dos configuraciones. Caché de prompts para el sistema y las herramientas. Sin `temperature` y sin `tool_choice` forzado (`auto`). `strict: true` en las herramientas. `fallbacks: "default"`, registrando el **modelo que respondió**; una ejecución que respondió otro modelo se marca y se repite.
 - Modo simulado (guion JSON) para correr sin clave y en las pruebas.
-- MCP: SDK oficial `mcp` (FastMCP en los servidores, cliente por stdio). Herramientas con descripción de **cuándo** usarlas, esquema estricto (`additionalProperties: false`) y rechazos que dicen qué corregir.
+- MCP: SDK oficial `mcp` 2.x (`MCPServer`, antes llamado FastMCP, en los servidores; cliente por stdio). Después de registrar las herramientas, llama a `endurecer_esquemas` (`src/revisor/servidores/comun.py`): sin eso, el SDK acepta argumentos desconocidos sin avisar. Herramientas con descripción de **cuándo** usarlas, esquema estricto (`additionalProperties: false`) y rechazos que dicen qué corregir.
 
 ## Política, límites y trazas
 - `config/politica.json`: ocultar > denegar > confirmar > permitir > por defecto. Cada regla se justifica en `_cambios`.

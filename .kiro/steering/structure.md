@@ -11,7 +11,7 @@ inclusion: always
 |---|---|
 | `src/revisor/backlog/` | `puerto.py` (interfaz), `local.py` (`BacklogLocal`), `azure_devops.py` (`BacklogAzureDevOps`, F7) |
 | `src/revisor/conocimiento/catalogo.py` | Único módulo que carga y valida `conocimiento/criterios.yaml` |
-| `src/revisor/servidores/` | `servidor_backlog`, `servidor_conocimiento`, `servidor_estimacion` (FastMCP) |
+| `src/revisor/servidores/` | `servidor_backlog`, `servidor_conocimiento`, `servidor_estimacion` (`MCPServer` de mcp 2.x); `validacion.py` y `comun.py` (esquemas estrictos, envoltura no confiable) |
 | `src/revisor/agente/` | Bucle, política, traza, modelo real y simulado, CLI `revisar` |
 | `src/revisor/integracion/` | `poller_azure.py` (F7) |
 | `config/` | `config.json`, `politica.json`, `instrucciones_base.md` |
@@ -30,7 +30,7 @@ inclusion: always
 - En Azure DevOps, `aprobar_para_fabrica` lanza `OperacionProhibida` y nunca se cambia `System.State`.
 
 ## Reglas como datos
-- `conocimiento/criterios.yaml` es la **única fuente de verdad** de los criterios. Lo carga y valida solo `catalogo.py`; los servidores, la herramienta de etiquetado y las métricas lo consumen de ahí.
+- `conocimiento/criterios.yaml` es la **única fuente de verdad** de los criterios y de la lista de tipos de HU (por ahora solo `funcional`). Lo carga y valida solo `catalogo.py`; los servidores, la herramienta de etiquetado y las métricas lo consumen de ahí.
 - Agregar, cambiar o retirar un criterio = editar el YAML y nada más. **Nunca** escribas ids de criterios en código Python, en `SKILL.md` ni en la política.
 - Los ids nunca se borran ni se reutilizan: un criterio se marca `obsoleto` con `reemplazado_por`.
 - Catálogo inválido ⇒ el sistema no arranca, con un mensaje que dice qué criterio y qué campo fallan.

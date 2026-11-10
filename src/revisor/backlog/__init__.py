@@ -4,6 +4,7 @@ from revisor.backlog.puerto import (
     ErrorBacklog,
     Historia,
     HistoriaNoEncontrada,
+    HistoriaSimilar,
     OperacionProhibida,
     PuertoBacklog,
     Recomendacion,
@@ -13,6 +14,7 @@ from revisor.backlog.puerto import (
 __all__ = [
     "ErrorBacklog",
     "Historia",
+    "HistoriaSimilar",
     "HistoriaNoEncontrada",
     "OperacionProhibida",
     "PuertoBacklog",

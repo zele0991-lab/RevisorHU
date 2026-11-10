@@ -17,10 +17,10 @@ borran: si una cambia, se agrega una entrada nueva que la reemplaza y se indica 
 - **Decisión:** bucle manual, como el `agente.py` del kit.
 - **Consecuencias:** en cada llamada podemos aplicar la política, contar topes y escribir la traza. Cuesta algo más de código.
 
-## D-003 · Servidores MCP con el SDK oficial `mcp` (FastMCP) por stdio
+## D-003 · Servidores MCP con el SDK oficial `mcp` (MCPServer, antes FastMCP) por stdio
 - **Fecha:** 2026-11-09
 - **Contexto:** el kit habla MCP a mano. Queremos conectar los mismos servidores a Claude Code y a Kiro para probarlos.
-- **Decisión:** FastMCP para los servidores y el cliente stdio del SDK en el host. Los servidores se registran en `.mcp.json` y en `.kiro/settings/mcp.json`.
+- **Decisión:** `MCPServer` (en mcp 2.x, FastMCP pasó a llamarse así; actualizado en F1) para los servidores y el cliente stdio del SDK en el host. Los servidores se registran en `.mcp.json` y en `.kiro/settings/mcp.json`.
 - **Consecuencias:** esquemas generados de forma estándar y servidores reutilizables fuera del agente.
 
 ## D-004 · Backlog detrás de un puerto con adaptadores
@@ -95,3 +95,41 @@ borran: si una cambia, se agrega una entrada nueva que la reemplaza y se indica 
 - **Contexto:** git en Windows (`core.autocrlf=true`) convierte LF a CRLF al hacer checkout. Las trazas registran el hash SHA-256 de `SKILL.md`, `criterios.yaml` y el conjunto de datos.
 - **Decisión:** `.gitattributes` con `* text=auto eol=lf`.
 - **Consecuencias:** el mismo commit produce los mismos hashes en cualquier máquina. Además, los módulos que calculan hashes deben leer los archivos en modo binario.
+
+## D-015 · Tipos de HU: por ahora solo `funcional`, definidos como datos
+- **Fecha:** 2026-11-09
+- **Contexto:** `registrar_revision` valida el `tipo` contra una lista cerrada. Esa misma lista la usan los anotadores y la métrica de exactitud del tipo.
+- **Decisión (confirmada por Leonardo Zeledón):** "de momento" el único tipo es `funcional`. La lista **no** se escribe en el código: el servidor la obtiene de la fuente de reglas (`FuenteReglas.tipos_hu()`), que en F2 sale de `conocimiento/criterios.yaml`.
+- **Consecuencias:** agregar un tipo es editar datos; hay una prueba que lo verifica. Mientras haya un solo tipo, la exactitud del tipo es trivial (100 %) y no aporta al artículo; se reportará solo si la lista crece antes de congelar el catálogo.
+
+## D-016 · "Mismo rol" en una división = mismo rol entre las partes
+- **Fecha:** 2026-11-09
+- **Contexto:** las HU de Dalpiaz están en inglés ("As a user…") y las partes se redactan en español ("Como usuario…"). Comparar con el rol de la HU original fallaría por el idioma o por HU sin rol.
+- **Decisión (confirmada por Leonardo Zeledón):** `proponer_division` exige que todas las partes compartan el mismo rol entre sí. La comparación ignora artículos, tildes y mayúsculas. La trazabilidad con la HU original queda registrada por su id en el borrador.
+- **Consecuencias:** una división que cambia de persona usuaria (por ejemplo, cliente y cajero) se rechaza.
+
+## D-017 · Reglas de validación de `registrar_revision` (interpretación del prompt)
+- **Fecha:** 2026-11-09
+- **Contexto:** el prompt fija las reglas generales; algunos detalles había que concretarlos.
+- **Decisión:**
+  - el servidor devuelve **todos** los errores juntos, para que el modelo corrija en un solo intento;
+  - un rechazo **no consume** la única revisión permitida por HU y ejecución; solo una revisión registrada con éxito la consume;
+  - `historia_refinada` es obligatoria al aceptar; al devolver o dividir puede ir vacía (por ejemplo, si falta información, para no inventar requisitos). Si viene, tiene que seguir el formato "Como…, quiero…, para…";
+  - los criterios de aceptación, cuando vienen, siempre van en Gherkin en español (Dado … Cuando … Entonces …, en ese orden). Al aceptar se exige al menos uno;
+  - al devolver se exige al menos un defecto y una recomendación. Con cualquier decisión, cada recomendación tiene que referenciar un defecto de la lista;
+  - datos personales: correo; cédula (9 dígitos, con o sin guiones); teléfono de Costa Rica (+506 o dddd-dddd); IBAN CR; cuenta (10 o más dígitos); tarjeta (13 a 19 dígitos que pasan Luhn). Un número suelto de 8 dígitos **no** se toma como teléfono, para no rechazar montos. El mensaje de error enmascara el dato.
+- **Consecuencias:** hay una prueba por cada regla en `tests/test_servidor_backlog.py`.
+
+## D-018 · Búsqueda de similares por TF-IDF y cambios al puerto
+- **Fecha:** 2026-11-09
+- **Contexto:** las pruebas no usan la red y el experimento tiene que ser determinista.
+- **Decisión:** `BacklogLocal` usa TF-IDF con coseno, en Python puro (`backlog/similitud.py`). El puerto cambia en dos puntos:
+  - `buscar_similares` devuelve `HistoriaSimilar(historia, similitud | None)`, porque la similitud ayuda a reconocer duplicados (Azure DevOps puede devolver `None`);
+  - `Historia.titulo` pasa a ser opcional, porque los casos de evaluación no traen título.
+- **Consecuencias:** la propia HU aparece en sus resultados; la descripción de la herramienta le dice al modelo que la reconozca por su id. Los metadatos de investigación de los casos (`es_dificil`, `motivo_dificultad`) nunca salen del backlog.
+
+## D-019 · Pendiente para F3: el tope de la política debe contar solo escrituras exitosas
+- **Fecha:** 2026-11-09
+- **Contexto:** en el kit, `Politica.registrar` cuenta toda llamada permitida, aunque el servidor la rechace. Con un tope de 1 para `registrar_revision`, un primer intento rechazado por validación bloquearía la corrección, y el agente no podría registrar nada.
+- **Decisión propuesta (se confirma en F3):** el contador de topes cuenta solo las llamadas que el servidor aceptó (`es_error = false`). Los intentos rechazados quedan en la traza y se reportan.
+- **Consecuencias:** se mantiene "una revisión por ejecución", y el servidor la refuerza por su lado.

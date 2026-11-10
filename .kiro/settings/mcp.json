@@ -2,7 +2,7 @@
   "mcpServers": {
     "backlog": {
       "command": ".venv/Scripts/python.exe",
-      "args": ["-m", "revisor.servidores.servidor_backlog"]
+      "args": ["-m", "revisor.servidores.servidor_backlog", "--historias", "datos/ejemplo/backlog_ejemplo.json", "--estado", "estado"]
     },
     "conocimiento": {
       "command": ".venv/Scripts/python.exe",

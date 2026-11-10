@@ -11,7 +11,7 @@
 - Pregunta de investigación: ¿la Skill (`skills/revisor-hu/SKILL.md`) mejora la exactitud de la decisión frente a un párrafo genérico (`config/instrucciones_base.md`), y a qué costo en tokens? **Solo cambia el prompt de sistema**: el modelo, las herramientas, la política y el `effort` son los mismos.
 
 ## Reglas como datos
-- `conocimiento/criterios.yaml` es la **única fuente de verdad** de los criterios. Lo carga y valida solo `src/revisor/conocimiento/catalogo.py`. Todo lo demás lo consume de ahí.
+- `conocimiento/criterios.yaml` es la **única fuente de verdad** de los criterios y de la lista de tipos de HU (por ahora solo `funcional`). Lo carga y valida solo `src/revisor/conocimiento/catalogo.py`. Todo lo demás lo consume de ahí.
 - Agregar, cambiar o retirar un criterio = editar el YAML y nada más. **Nunca** escribas ids de criterios (`DOR-001`…) en código Python, en `SKILL.md` ni en la política.
 - Los ids nunca se borran ni se reutilizan: un criterio se marca `obsoleto` con `reemplazado_por`.
 - Catálogo inválido ⇒ el sistema no arranca, con un mensaje que dice qué criterio y qué campo fallan.
@@ -23,7 +23,7 @@
 - SDK `anthropic` con un **bucle manual** de tool use (no el Tool Runner): la política y la traza se aplican en cada llamada. **Antes de escribir código del SDK, consulta la skill `claude-api`.** No adivines firmas.
 - Modelo en `config/config.json` (`claude-opus-5-5` por defecto). Pensamiento adaptativo y `effort` explícito, iguales en las dos configuraciones. Caché de prompts para el sistema y las herramientas. Sin `temperature` y sin `tool_choice` forzado (`auto`). `strict: true` en las herramientas. `fallbacks: "default"`, registrando el **modelo que respondió**; una ejecución que respondió otro modelo se marca y se repite.
 - Modo simulado (guion JSON) para correr sin clave y en las pruebas.
-- MCP: SDK oficial `mcp` (FastMCP en los servidores, cliente por stdio). Herramientas con descripción de **cuándo** usarlas, esquema estricto (`additionalProperties: false`) y rechazos que dicen qué corregir.
+- MCP: SDK oficial `mcp` 2.x (`MCPServer`, antes llamado FastMCP, en los servidores; cliente por stdio). Después de registrar las herramientas, llama a `endurecer_esquemas` (`src/revisor/servidores/comun.py`): sin eso, el SDK acepta argumentos desconocidos sin avisar. Herramientas con descripción de **cuándo** usarlas, esquema estricto (`additionalProperties: false`) y rechazos que dicen qué corregir.
 - El agente ve las herramientas como `servidor__herramienta` (como en el kit), por ejemplo `backlog__leer_historia`; la política usa esos nombres y admite comodines.
 - Backlog detrás de un puerto (`src/revisor/backlog/puerto.py`) con adaptadores `BacklogLocal` (experimento) y `BacklogAzureDevOps` (F7). El servidor MCP **valida**; el puerto solo lee y persiste. Un adaptador nuevo no toca el agente, la política, la Skill ni los servidores. Azure DevOps por **polling WIQL**, sin webhooks; ahí el agente solo comenta, etiqueta y sugiere puntos, y **nunca cambia el estado**.
 
