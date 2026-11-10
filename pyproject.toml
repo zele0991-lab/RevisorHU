@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "revisor"
+version = "0.1.0"
+description = "Agente revisor de historias de usuario (proyecto final, IA Distribuida, CENFOTEC)"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Leonardo Zeledón V." }]
+dependencies = [
+    "anthropic>=2.7",
+    "mcp>=2.3",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+# Se implementa en la F3; se declara desde ya para fijar el nombre del comando.
+revisar = "revisor.agente.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,7 @@
+# Saltos de línea LF en todas las máquinas. Por qué: las trazas registran el hash SHA-256 de
+# SKILL.md, criterios.yaml y el conjunto de datos; con CRLF en Windows el hash cambiaría
+# según quién clone el repositorio y se perdería la reproducibilidad (ver D-014).
+* text=auto eol=lf
+*.pdf binary
+*.png binary
+*.docx binary

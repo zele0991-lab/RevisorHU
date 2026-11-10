@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "backlog": {
+      "command": ".venv/Scripts/python.exe",
+      "args": ["-m", "revisor.servidores.servidor_backlog"]
+    },
+    "conocimiento": {
+      "command": ".venv/Scripts/python.exe",
+      "args": ["-m", "revisor.servidores.servidor_conocimiento"]
+    },
+    "estimacion": {
+      "command": ".venv/Scripts/python.exe",
+      "args": ["-m", "revisor.servidores.servidor_estimacion"]
+    }
+  }
+}
