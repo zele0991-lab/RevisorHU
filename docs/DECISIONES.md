@@ -179,3 +179,28 @@ borran: si una cambia, se agrega una entrada nueva que la reemplaza y se indica 
 - **Contexto:** para probar el agente con el modelo real hacía falta un prompt de sistema. `SKILL.md` es trabajo de F4.
 - **Decisión:** se creó `config/instrucciones_base.md` con el párrafo exacto que fija el prompt del proyecto, y las demostraciones de F3 se corrieron con la configuración `base`.
 - **Consecuencias:** F4 no cambia ese archivo. Si hubiera que ajustarlo, se registra aquí antes de congelar.
+
+## D-025 · Regla de decisión: cualquier defecto lleva a devolver; si falta información, se devuelve antes de dividir
+- **Fecha:** 2026-11-14
+- **Contexto:** el prompt fija "si acepta, no hay defectos" (y el servidor lo valida), pero el catálogo tiene criterios de severidad `menor`, y `dor_v0.md` sugería que esos no impedían aceptar. Además, una HU puede ser a la vez ambigua y demasiado grande: en F3, el modelo estimó HU-002 en 13 puntos y la devolvió.
+- **Decisión (confirmada por Leonardo Zeledón):** las reglas se aplican en este orden.
+  1. Devolver si no se entiende, falta información para saber el alcance, es un duplicado o entra en conflicto con otra HU.
+  2. Dividir si es clara pero tiene más de un objetivo o más de 8 puntos (y se reportan los demás defectos).
+  3. Devolver ante **cualquier** defecto, sea cual sea su severidad.
+  4. Aceptar solo si no hay defectos.
+
+  La severidad ordena las correcciones, pero no cambia la decisión.
+- **Consecuencias:** la regla es la misma en `SKILL.md`, en `conocimiento/dor_v0.md` y en la guía de etiquetado (F5). Es probable que haya pocos casos de "aceptar"; al construir los casos (F5) hay que asegurar que cada decisión tenga al menos un 20 %. Se actualizó `dor_v0.md`, que antes decía lo contrario sobre la severidad.
+
+## D-026 · Diseño de la Skill
+- **Fecha:** 2026-11-14
+- **Decisión:**
+  - **Herramientas con su nombre completo:** la Skill las nombra como las ve el modelo (`servidor__herramienta`).
+  - **Sin la herramienta oculta:** no nombra `aprobar_para_fabrica`, para no enseñarle al modelo que existe; la regla dice "nunca intentes aprobar".
+  - **Detalle de todos los criterios, en paralelo:** pide el detalle de todos los criterios listados en una sola respuesta. Así evalúa uno por uno, como pide el prompt, sin gastar un paso por criterio.
+  - **Tres resultados por criterio:** cada uno queda como "cumple", "no cumple" o "no aplica". Solo "no cumple", con evidencia en el texto, es un defecto.
+  - **Criterio de parada:** termina al registrar la revisión, o después de dos respuestas seguidas sin información nueva. Ante un rechazo del servidor, hace como máximo dos intentos más.
+- **Consecuencias (prueba de F4 con 4 HU, no es el experimento):**
+  - Las cuatro decisiones fueron las esperadas: HU-003 devolver por duplicado y conflicto, HU-004 dividir en 4 partes, HU-006 devolver por ser técnica sin rol, HU-007 aceptar.
+  - Costo: US$0,13–0,25 por HU, unos 80–100 mil tokens con caché. Con la configuración base, en F3, fueron US$0,13–0,17. La diferencia de costo es justamente lo que mide la pregunta de investigación.
+  - La Skill marca muchos defectos (entre 8 y 14 en las HU devueltas); habrá que contrastarlo con las etiquetas de los anotadores.

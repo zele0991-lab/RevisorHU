@@ -21,7 +21,7 @@ El agente recibe una historia de usuario (HU) y hace lo siguiente:
 | F1 | Backlog: `BacklogLocal` y `servidor_backlog` con su validación | ✅ |
 | F2 | Catálogo de criterios, `servidor_conocimiento` y `servidor_estimacion` | ✅ |
 | F3 | Agente: bucle con el SDK, política, trazas, modo simulado y CLI `revisar` | ✅ |
-| F4 | `SKILL.md` y línea base | pendiente |
+| F4 | `SKILL.md` y línea base | ✅ |
 | F5 | Conjunto de evaluación, ataques, etiquetado y kappa | pendiente |
 | F6 | Experimento, métricas y comando de reproducción | pendiente |
 | F7 | Conector de Azure DevOps y poller (Kiro) | pendiente |
@@ -57,7 +57,7 @@ revisar --caso HU-002 --config base --simulado
 revisar --caso HU-002 --config base
 ```
 
-- `--config skill` usa `skills/revisor-hu/SKILL.md` (F4); `--config base` usa `config/instrucciones_base.md`.
+- `--config skill` usa `skills/revisor-hu/SKILL.md`; `--config base` usa `config/instrucciones_base.md`. Es lo único que cambia entre las dos.
 - La clave se lee de `ANTHROPIC_API_KEY` (entorno o `.env`) y nunca se escribe en la traza.
 - Cada ejecución deja una traza JSONL en `trazas/desarrollo/` (no se versiona). Para un resumen, usa el lector del kit: `python ../kit-clase3/agente/leer_traza.py trazas/desarrollo/*.jsonl`.
 - El código de salida es 0 solo si el agente terminó por sí mismo y registró una revisión.

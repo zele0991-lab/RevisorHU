@@ -26,18 +26,21 @@ Una historia está lista cuando:
   protección de datos y normativa).
 
 ## Cómo se decide
-- **Aceptar:** cumple todos los criterios que aplican a su sistema. Se entrega refinada y con
-  criterios en Gherkin.
-- **Devolver:** incumple al menos un criterio. Cada recomendación dice qué corregir y apunta a un
-  criterio concreto. Si falta información, se devuelve con **preguntas**; no se inventan
-  requisitos.
-- **Dividir:** tiene más de un objetivo o mide más de 8 puntos. Se proponen de 2 a 5 partes, todas
-  con el mismo rol.
+Las reglas se aplican en este orden:
 
-La severidad orienta la decisión: un criterio **bloqueante** incumplido impide aceptar; los de
-severidad **mayor** normalmente también; los de severidad **menor** se reportan, pero el líder
-puede aceptar la historia igual. La regla final la fija la Skill del agente y, en el banco, el
-líder técnico.
+1. **Devolver** si la historia está vacía, no se entiende, le falta información para saber su
+   alcance, está duplicada o entra en conflicto con otra. No se divide lo que no se entiende.
+2. **Dividir** si es clara pero tiene más de un objetivo o mide más de 8 puntos. Se proponen de 2
+   a 5 partes, todas con el mismo rol, y se reportan los demás defectos.
+3. **Devolver** si incumple **cualquier** criterio que aplique a su sistema, sea cual sea su
+   severidad. Cada recomendación dice qué corregir y apunta a un criterio concreto. Si falta
+   información, se devuelve con **preguntas**; no se inventan requisitos.
+4. **Aceptar** solo si cumple todos los criterios que aplican. Se entrega refinada y con criterios
+   en Gherkin.
+
+La severidad no cambia la decisión: sirve para ordenar las correcciones (primero las
+bloqueantes). Esta regla es la misma para el agente y para las personas que etiquetan el
+conjunto de evaluación (D-025).
 
 ## Lo que la DoR no cambia
 La aprobación para la fábrica es siempre de una persona. El agente recomienda.
