@@ -14,7 +14,8 @@ inclusion: always
 | `src/revisor/servidores/` | `servidor_backlog`, `servidor_conocimiento`, `servidor_estimacion` (`MCPServer` de mcp 2.x); `validacion.py` y `comun.py` (esquemas estrictos, envoltura no confiable) |
 | `src/revisor/agente/` | Bucle, política, traza, modelo real y simulado, CLI `revisar` |
 | `src/revisor/integracion/` | `poller_azure.py` (F7) |
-| `config/` | `config.json`, `politica.json`, `instrucciones_base.md` |
+| `config/` | `config.json` (experimento), `config_azure.json` (Azure DevOps: solo difiere en lo que exige el backend), `azure_devops.json` (conector, sin secretos), `politica.json`, `instrucciones_base.md` |
+| `docs/kiro/` | Prompts de los specs de Kiro (F7: `PROMPT_F7_AZURE_DEVOPS.md`) |
 | `conocimiento/` | `criterios.yaml` y explicaciones para personas (`qus.md`, `invest.md`, `banca_movil.md`, `dor_v0.md`) |
 | `skills/revisor-hu/SKILL.md` | Procedimiento, reglas, casos borde y criterio de parada |
 | `datos/` | Scripts de descarga, construcción de casos y etiquetado; `evaluacion/`, `ataques/`, `etiquetas/`; `crudos/` no se versiona |

@@ -88,6 +88,8 @@ Los tres servidores (`backlog`, `conocimiento` y `estimacion`) están registrado
 - [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md): diagrama y responsabilidades.
 - [docs/DECISIONES.md](docs/DECISIONES.md): registro de decisiones.
 - [docs/USO_IA.md](docs/USO_IA.md): bitácora de uso de IA.
+- [docs/GUIA_AZURE_DEVOPS.md](docs/GUIA_AZURE_DEVOPS.md): organización de prueba, PAT, HU sintéticas y cómo trabajar la F7 con Kiro.
+- [docs/kiro/PROMPT_F7_AZURE_DEVOPS.md](docs/kiro/PROMPT_F7_AZURE_DEVOPS.md): prompt del spec de Kiro para el conector.
 - [CLAUDE.md](CLAUDE.md) y [.kiro/steering/](.kiro/steering/): reglas del proyecto para Claude Code y Kiro.
 
 ## Datos y seguridad
