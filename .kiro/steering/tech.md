@@ -25,6 +25,7 @@ inclusion: always
 
 ## Secretos
 - Nunca escribas claves en código, trazas ni logs; el PAT se enmascara. Los secretos van en `.env`, que no se versiona (plantilla: `.env.example`).
+- Cada servidor MCP recibe solo el entorno mínimo del SDK más las variables que declara en `entorno` (config). Solo el backlog de Azure recibe `AZDO_*`; ningún servidor recibe nunca `ANTHROPIC_API_KEY` (D-029).
 - **No hagas llamadas pagadas a la API** sin avisar antes del costo estimado.
 
 ## Forma de trabajo

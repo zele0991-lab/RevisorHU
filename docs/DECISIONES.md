@@ -224,3 +224,17 @@ borran: si una cambia, se agrega una entrada nueva que la reemplaza y se indica 
 - **Contexto:** hasta F4 se gastaron US$1,13 en demostraciones (F3: 0,30; F4: 0,83). El experimento completo costaría US$90–110 según los costos medidos.
 - **Decisión (de Leonardo Zeledón):** no se ejecutan más revisiones con el modelo real hasta nuevo aviso. Se sigue construyendo el proyecto, verificado con pruebas automáticas (sin red) y con el modo simulado. Cuando se retomen las corridas, se pedirá autorización con el costo estimado.
 - **Consecuencias:** las fases que dependen de corridas (la línea base de F6 y la prueba de punta a punta de F7 contra Azure DevOps) se construyen y prueban sin la API, y su ejecución real queda pendiente.
+
+## D-029 · Preparación de la F7 (Azure DevOps con Kiro)
+- **Fecha:** 2026-11-14
+- **Contexto:** Kiro implementará el conector a partir de un spec y no debe tocar el agente, la política, la Skill ni los servidores. Para eso, el punto de conexión tiene que existir antes. Además, el prompt de Kiro del kit quedó desactualizado: hablaba de Gherkin y no conocía el perfil `azure`.
+- **Decisión:**
+  - **Arranque del backlog según el backend:** `servidor_backlog` acepta `--backend local|azure`. Con `azure` carga `revisor.backlog.azure_devops.BacklogAzureDevOps.desde_configuracion(ruta_config, marca)`; si el módulo todavía no existe, no arranca y dice que falta la F7.
+  - **`config/config_azure.json`:** solo puede diferir de `config.json` en el backend, las historias, la carpeta de trazas y el comando del backlog. Lo verifica `tests/test_config_azure.py`, para que el agente que corre en Azure DevOps sea el mismo que se evalúa.
+  - **`config/azure_devops.json`:** contiene el mapeo Area Path → sistema, las etiquetas, los parámetros del poller y la **lista de escrituras desatendidas** (`registrar_revision` y `proponer_division`; nunca la aprobación). No contiene secretos.
+  - **Entorno de los servidores:** cada servidor declara en `entorno` las variables que puede recibir. Solo el backlog de Azure recibe `AZDO_ORG_URL`, `AZDO_PROJECT` y `AZDO_PAT`; el host rechaza pasar `ANTHROPIC_API_KEY` a cualquier servidor.
+  - **Modo desatendido:** el poller usa un aprobador que solo aprueba la lista desatendida y lo deja registrado en la traza. Es la confirmación del perfil `azure` cuando no hay una persona delante.
+  - **El poller corre simulado por defecto** (D-028). Con `--real` llama al modelo e informa antes el costo estimado.
+  - **Story points:** se sugieren solo en el comentario; el conector no escribe el campo. El único campo que modifica es `System.Tags`.
+  - **Prompt nuevo para Kiro** en `docs/kiro/PROMPT_F7_AZURE_DEVOPS.md` y guía para la persona en `docs/GUIA_AZURE_DEVOPS.md`, con un CSV de 10 HU sintéticas (`datos/ejemplo/hu_sinteticas_azure.csv`), entre ellas 2 ataques propios de Azure DevOps (comentario HTML y texto oculto).
+- **Consecuencias:** Kiro solo agrega `src/revisor/backlog/azure_devops.py`, `src/revisor/integracion/poller_azure.py` y sus pruebas. La demo de F7 se puede hacer sin costo de API, en modo simulado contra la organización de prueba.

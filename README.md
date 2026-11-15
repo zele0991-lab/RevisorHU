@@ -24,7 +24,7 @@ El agente recibe una historia de usuario (HU) y hace lo siguiente:
 | F4 | `SKILL.md` y línea base | ✅ |
 | F5 | Conjunto de evaluación, ataques, etiquetado y kappa | pendiente |
 | F6 | Experimento, métricas y comando de reproducción | pendiente |
-| F7 | Conector de Azure DevOps y poller (Kiro) | pendiente |
+| F7 | Conector de Azure DevOps y poller (Kiro) | preparado para Kiro: ver `docs/GUIA_AZURE_DEVOPS.md` |
 
 ## Instalación (Windows, PowerShell)
 

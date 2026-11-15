@@ -7,12 +7,14 @@ Por qué un proceso de servidor por ejecución:
     la anterior, que es lo que exige repetir cada configuración 3 veces.
 
 Por qué el entorno de los servidores NO hereda el del host:
-    `StdioServerParameters(env=None)` les da solo un entorno mínimo seguro del SDK. La clave
-    de la API nunca llega a un servidor que no la necesita.
+    El SDK les da solo un entorno mínimo seguro. A eso se suman únicamente las variables que la
+    configuración nombra para cada servidor (campo "entorno"; ver `entorno_servidor`). La clave
+    de la API nunca llega a un servidor.
 """
 
 from __future__ import annotations
 
+import os
 import sys
 from contextlib import AsyncExitStack
 from pathlib import Path
@@ -25,6 +27,26 @@ SEPARADOR = "__"  # servidor__herramienta, como el kit: evita choques de nombres
 
 class ErrorHost(Exception):
     pass
+
+
+# Nunca se pasan a un servidor, aunque la configuración lo pida: solo el host habla con la API.
+VARIABLES_PROHIBIDAS = frozenset({"ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN"})
+
+
+def entorno_servidor(srv: dict) -> dict[str, str] | None:
+    """
+    Variables de entorno EXTRA que recibe un servidor, además del entorno mínimo del SDK.
+
+    Por qué una lista explícita por servidor (campo "entorno" en config.json): el conector de
+    Azure DevOps necesita AZDO_ORG_URL, AZDO_PROJECT y AZDO_PAT, pero ningún otro servidor debe
+    verlas, y ninguno debe ver la clave de la API. Las variables ausentes se omiten.
+    """
+    nombres = srv.get("entorno", [])
+    prohibidas = VARIABLES_PROHIBIDAS.intersection(nombres)
+    if prohibidas:
+        raise ErrorHost(f"el servidor '{srv['nombre']}' no puede recibir {', '.join(sorted(prohibidas))}")
+    extra = {n: os.environ[n] for n in nombres if os.environ.get(n)}
+    return extra or None
 
 
 def expandir_comando(comando: list[str], valores: dict[str, str | list[str]]) -> list[str]:
@@ -63,7 +85,8 @@ class HostMCP:
         try:
             for srv in self._servidores:
                 comando = expandir_comando(srv["comando"], self._valores)
-                params = StdioServerParameters(command=comando[0], args=comando[1:], cwd=str(self._raiz))
+                params = StdioServerParameters(command=comando[0], args=comando[1:], cwd=str(self._raiz),
+                                               env=entorno_servidor(srv))
                 lectura, escritura = await self._pila.enter_async_context(stdio_client(params, errlog=self._errlog))
                 sesion = await self._pila.enter_async_context(ClientSession(lectura, escritura))
                 await sesion.initialize()

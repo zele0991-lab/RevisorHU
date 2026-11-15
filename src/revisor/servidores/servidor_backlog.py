@@ -305,19 +305,49 @@ def construir(argv: list[str] | None = None) -> MCPServer:
     Arma el servidor desde la línea de comandos. Separado de `main` para poder probar el
     arranque (y sus fallos) sin abrir el canal stdio.
     """
-    from revisor.backlog.local import BacklogLocal
     from revisor.conocimiento.catalogo import RUTA_POR_DEFECTO, cargar_catalogo
 
     ap = argparse.ArgumentParser(description="Servidor MCP del backlog (stdio)")
-    ap.add_argument("--historias", nargs="+", required=True, help="archivos .json o .jsonl con las HU")
+    ap.add_argument("--backend", choices=("local", "azure"), default="local",
+                    help="local (JSON, experimento) o azure (Azure DevOps, F7)")
+    ap.add_argument("--historias", nargs="+", help="backend local: archivos .json o .jsonl con las HU")
+    ap.add_argument("--config-azure", default="config/azure_devops.json",
+                    help="backend azure: configuración del conector (sin secretos)")
     ap.add_argument("--estado", default="estado", help="carpeta donde se escriben los borradores")
     ap.add_argument("--marca", default=None, help="identifica los borradores de esta ejecución (run_id)")
     ap.add_argument("--catalogo", default=str(RUTA_POR_DEFECTO), help="catálogo de criterios (YAML)")
     args = ap.parse_args(argv)
     # El catálogo primero: si las reglas son inválidas, no tiene sentido cargar nada más.
     catalogo = cargar_catalogo(args.catalogo)
-    backlog = BacklogLocal(args.historias, args.estado, marca=args.marca)
-    return crear_servidor(backlog, catalogo)
+    return crear_servidor(_crear_backlog(args), catalogo)
+
+
+def _crear_backlog(args) -> PuertoBacklog:
+    """
+    Elige el adaptador del puerto. Es el ÚNICO lugar del servidor que conoce los adaptadores.
+
+    Contrato con la F7 (Kiro): el módulo `revisor.backlog.azure_devops` define
+    `BacklogAzureDevOps(PuertoBacklog)` con el método de clase
+    `desde_configuracion(ruta_config: Path, marca: str | None) -> BacklogAzureDevOps`, que lee
+    la URL, el proyecto y el PAT del entorno (AZDO_ORG_URL, AZDO_PROJECT, AZDO_PAT). Con eso,
+    agregar Azure DevOps no exige tocar este servidor.
+    """
+    if args.backend == "local":
+        from revisor.backlog.local import BacklogLocal
+
+        if not args.historias:
+            raise ErrorBacklog("con --backend local hay que indicar --historias (archivos .json o .jsonl).")
+        return BacklogLocal(args.historias, args.estado, marca=args.marca)
+    try:
+        from revisor.backlog.azure_devops import BacklogAzureDevOps
+    except ModuleNotFoundError as e:
+        if e.name != "revisor.backlog.azure_devops":
+            raise
+        raise ErrorBacklog("el conector de Azure DevOps todavía no existe (fase F7, con Kiro): "
+                           "falta src/revisor/backlog/azure_devops.py.") from None
+    from pathlib import Path
+
+    return BacklogAzureDevOps.desde_configuracion(Path(args.config_azure), args.marca)
 
 
 def main(argv: list[str] | None = None) -> int:

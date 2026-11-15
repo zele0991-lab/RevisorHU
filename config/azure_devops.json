@@ -1,0 +1,29 @@
+{
+  "_lectura": "Configuración del conector de Azure DevOps (F7). SIN secretos: la URL de la organización, el proyecto y el PAT vienen del entorno o de .env (AZDO_ORG_URL, AZDO_PROJECT, AZDO_PAT). Kiro completa y ajusta este archivo en su spec; cada cambio de fondo se registra en docs/DECISIONES.md.",
+  "tipo_work_item": "User Story",
+  "mapeo_area_sistema": {
+    "RevisorHU-Pruebas\\BancaMovil": "banca_movil",
+    "RevisorHU-Pruebas\\Core": "core"
+  },
+  "_mapeo": "Area Path -> sistema del catálogo. Si un Area Path no está en el mapeo, se usa 'sistema_por_defecto' y se registra una advertencia en la traza.",
+  "sistema_por_defecto": "todos",
+  "etiquetas": {
+    "revisada": "ia-revisada",
+    "por_decision": {
+      "aceptar": "ia-aceptar",
+      "devolver": "ia-devolver",
+      "dividir": "ia-dividir"
+    }
+  },
+  "poller": {
+    "intervalo_minutos": 15,
+    "max_hu_por_ciclo": 3,
+    "ventana_dias": 7,
+    "registro_procesados": "estado/azure_procesados.json"
+  },
+  "_escrituras_desatendidas": "En el perfil 'azure' de la política, las escrituras requieren confirmación. El poller corre sin una persona delante: solo puede aprobar automáticamente las herramientas de esta lista, y la traza lo registra como 'aprobada por la lista desatendida' (D-029).",
+  "escrituras_desatendidas": [
+    "backlog__registrar_revision",
+    "backlog__proponer_division"
+  ]
+}

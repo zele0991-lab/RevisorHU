@@ -38,6 +38,7 @@
 ## Datos y seguridad
 - **Ninguna HU real del banco** entra al repositorio ni se envía a la API. Solo HU genéricas (Dalpiaz, TAWOS) y sintéticas.
 - Nunca escribas claves en código, trazas ni logs; el PAT se enmascara. Los secretos van en `.env`, que no se versiona.
+- Cada servidor MCP recibe solo el entorno mínimo del SDK más las variables que declara en `entorno` (config). Solo el backlog de Azure recibe `AZDO_*`; ningún servidor recibe nunca `ANTHROPIC_API_KEY` (D-029).
 - `datos/crudos/` no se versiona; las licencias se documentan en `datos/LICENCIAS.md`.
 - **Claude no etiqueta casos.** Las etiquetas son de dos personas del equipo. Si te lo piden, niégate y recuérdalo.
 
