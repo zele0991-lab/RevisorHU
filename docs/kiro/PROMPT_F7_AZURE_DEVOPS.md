@@ -15,7 +15,9 @@ Lee, en este orden:
 1. `.kiro/steering/` (product, tech, structure). Son las mismas reglas que `CLAUDE.md`.
 2. `docs/DECISIONES.md`, sobre todo D-004 (puerto y adaptadores), D-005 (polling), D-006 (el agente
    nunca aprueba), D-008 (confirmación en Azure), D-019 (topes), D-027 (formato de los criterios),
-   D-028 (pausa de llamadas pagadas) y D-029 (preparación de esta fase).
+   D-028 (pausa de llamadas pagadas), D-029 (preparación de esta fase) y D-030 (texto oculto que
+   Azure DevOps conserva: variantes que hay que limpiar, dato de prueba real y campos de autor que
+   no deben llegar al agente).
 3. `src/revisor/backlog/puerto.py`: la interfaz que implementas.
 4. `src/revisor/servidores/servidor_backlog.py`, función `_crear_backlog`: el contrato de arranque.
 5. `src/revisor/agente/bucle.py` (`Opciones`, `ejecutar`) y `config/config_azure.json`.
@@ -55,7 +57,12 @@ class BacklogAzureDevOps(PuertoBacklog):
   - Si el tipo no es el `tipo_work_item` de la configuración, o el id no es numérico, lanza
     `HistoriaNoEncontrada`.
   - Convierte el HTML a **texto plano** y **elimina** los comentarios HTML, los `<script>`/`<style>`
-    y los elementos ocultos (`display:none`, `hidden`), porque pueden traer instrucciones escondidas.
+    y los elementos ocultos, porque pueden traer instrucciones escondidas. Se considera oculto todo
+    elemento con `display:none` escrito de cualquier forma (mayúsculas, espacios, `;` final),
+    `visibility:hidden`, `opacity:0`, `font-size:0`, el atributo `hidden` o `aria-hidden="true"`
+    (D-030: Azure DevOps conserva `display:none;`).
+  - Copia a `Historia` **solo** título, descripción, criterios de aceptación, story points y Area
+    Path. Nunca `System.CreatedBy`, `System.ChangedBy` ni otros campos con nombres o correos.
   - Calcula el `sistema` con `mapeo_area_sistema`, usando el prefijo más largo que coincida. Si
     ninguno coincide, usa `sistema_por_defecto` y deja una advertencia en el log del servidor
     (stderr).
@@ -118,7 +125,10 @@ algo o escribir cualquier campo que no sea `System.Tags`. El único JSON Patch p
 Con el cliente HTTP falso y respuestas grabadas, como mínimo:
 - 401, 404, 429 (reintenta y luego funciona) y 5xx;
 - HTML malicioso: un comentario HTML con una instrucción y un elemento oculto desaparecen del
-  texto que llega al agente;
+  texto que llega al agente, incluidas las variantes de ocultamiento de D-030;
+- **respuesta real de la HU 10** (D-030), grabada como dato de prueba sin `System.CreatedBy` ni
+  `System.ChangedBy`: la instrucción del `span` oculto no llega al agente;
+- ningún campo de autor (nombre o correo) aparece en la `Historia` ni en la traza;
 - etiquetas existentes conservadas, y el JSON Patch toca **solo** `System.Tags`;
 - `aprobar_para_fabrica` lanza `OperacionProhibida`;
 - el mapeo Area Path → sistema, incluido un Area Path sin mapeo (→ `todos`);
