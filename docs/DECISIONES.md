@@ -204,3 +204,23 @@ borran: si una cambia, se agrega una entrada nueva que la reemplaza y se indica 
   - Las cuatro decisiones fueron las esperadas: HU-003 devolver por duplicado y conflicto, HU-004 dividir en 4 partes, HU-006 devolver por ser técnica sin rol, HU-007 aceptar.
   - Costo: US$0,13–0,25 por HU, unos 80–100 mil tokens con caché. Con la configuración base, en F3, fueron US$0,13–0,17. La diferencia de costo es justamente lo que mide la pregunta de investigación.
   - La Skill marca muchos defectos (entre 8 y 14 en las HU devueltas); habrá que contrastarlo con las etiquetas de los anotadores.
+
+## D-027 · Criterios de aceptación como reglas o lista de verificación, con el formato en el catálogo
+- **Fecha:** 2026-11-14
+- **Contexto:** el prompt y la propuesta pedían criterios de aceptación en Gherkin. El usuario prefiere, por ahora, criterios "normales": reglas o lista de verificación. Más adelante se decidirá si se pasa a Gherkin. Por eso el formato no debe quedar fijo en el código ni en la Skill.
+- **Decisión (de Leonardo Zeledón):**
+  - **La HU debe traer criterios de aceptación.** El criterio "Verificable" se mantiene, reescrito para reglas o lista de verificación con resultado observable.
+  - **El formato es un dato del catálogo:** campo de cabecera `formato_criterios_aceptacion`, que hoy vale `lista` y también admite `gherkin`. `catalogo.py` lo valida; el servidor lo lee para validar `registrar_revision` y para redactar la descripción de la herramienta. La Skill no nombra ningún formato: remite a esa descripción.
+  - **Validación con `lista`:** cada criterio tiene al menos 4 palabras (se rechaza un "Entra bien."), además de las reglas de longitud y datos personales. Que el resultado sea observable no se puede verificar automáticamente; queda para la Skill y para la revisión humana.
+  - **Validación con `gherkin`:** se exige "Dado … cuando … entonces …", como antes.
+  - El catálogo sube a la versión `0.2.0`. Las trazas de F3 y F4 se corrieron con la `0.1.0` y lo registran en su hash.
+- **Consecuencias:**
+  - Pasar a Gherkin es cambiar una línea del YAML; las pruebas lo verifican.
+  - Las HU de Dalpiaz suelen ser de una línea, sin criterios de aceptación, así que incumplirán "Verificable" y se devolverán. Al construir el conjunto (F5) hay que resolver cómo llegar al 20 % de casos de "aceptar": por ejemplo, con casos que sí traigan criterios.
+  - Esto se aparta de la propuesta (que decía Gherkin) por decisión del usuario.
+
+## D-028 · Pausa de las ejecuciones pagadas
+- **Fecha:** 2026-11-14
+- **Contexto:** hasta F4 se gastaron US$1,13 en demostraciones (F3: 0,30; F4: 0,83). El experimento completo costaría US$90–110 según los costos medidos.
+- **Decisión (de Leonardo Zeledón):** no se ejecutan más revisiones con el modelo real hasta nuevo aviso. Se sigue construyendo el proyecto, verificado con pruebas automáticas (sin red) y con el modo simulado. Cuando se retomen las corridas, se pedirá autorización con el costo estimado.
+- **Consecuencias:** las fases que dependen de corridas (la línea base de F6 y la prueba de punta a punta de F7 contra Azure DevOps) se construyen y prueban sin la API, y su ejecución real queda pendiente.

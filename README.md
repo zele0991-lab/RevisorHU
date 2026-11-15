@@ -6,7 +6,7 @@ El agente recibe una historia de usuario (HU) y hace lo siguiente:
 - la **clasifica** por tipo;
 - **busca** duplicados, conflictos e historias de referencia;
 - la **estima** en story points (Fibonacci);
-- la **refina** (redacción y criterios en Gherkin);
+- la **refina** (redacción y criterios de aceptación como reglas o lista de verificación; el formato es configurable);
 - **recomienda** una de tres decisiones: `aceptar`, `devolver` (con recomendaciones accionables) o `dividir`.
 
 **El agente nunca aprueba.** La aprobación para la fábrica de software la da una persona.

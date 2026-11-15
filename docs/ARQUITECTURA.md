@@ -64,7 +64,7 @@ flowchart LR
 | **Skill** (`SKILL.md`) o **instrucciones base** | El orden de trabajo, cuándo devolver o dividir, cuándo parar. Es la **única** diferencia entre las dos configuraciones. | Qué criterios existen (los pide a `listar_criterios`). |
 | **Modelo** | Qué herramienta llamar y con qué argumentos; la recomendación final. | Si una herramienta se ejecuta. |
 | **Política** (host) | Si cada llamada se oculta, se deniega, se confirma o se permite; topes de llamadas, pasos y tokens. | El contenido de la revisión. |
-| **Servidores MCP** | Si los argumentos son válidos (listas cerradas, ids del catálogo, Gherkin, datos personales, longitudes). Rechazan con un mensaje que dice qué corregir. | Si el agente tiene permiso. |
+| **Servidores MCP** | Si los argumentos son válidos (listas cerradas, ids del catálogo, formato de criterios de aceptación, datos personales, longitudes). Rechazan con un mensaje que dice qué corregir. | Si el agente tiene permiso. |
 | **Puerto de backlog** | Dónde y cómo se persiste (JSON local o Azure DevOps). | Si una revisión es válida. |
 | **Catálogo** (`catalogo.py`) | Qué criterios existen, a qué sistema aplican y si el archivo es válido. | Nada más: es datos. |
 | **Persona** | La aprobación para la fábrica. | — |

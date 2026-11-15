@@ -34,6 +34,9 @@ RUTA_POR_DEFECTO = Path("conocimiento/criterios.yaml")
 # Las categorías, los sistemas y los tipos de HU, en cambio, se declaran en el YAML.
 SEVERIDADES = ("bloqueante", "mayor", "menor")
 ESTADOS = ("activo", "obsoleto")
+# Formatos de criterios de aceptación que el servidor sabe validar. Cuál se usa lo decide el
+# YAML (`formato_criterios_aceptacion`): pasar de uno a otro es editar datos (D-027).
+FORMATOS_CRITERIOS = ("lista", "gherkin")
 TODOS = "todos"
 PATRON_ID = re.compile(r"^[A-Z]{2,5}-\d{3}$")
 PATRON_VERSION = re.compile(r"^\d+\.\d+\.\d+$")
@@ -41,7 +44,8 @@ PATRON_VERSION = re.compile(r"^\d+\.\d+\.\d+$")
 CAMPOS_TEXTO = ("nombre", "descripcion", "como_verificar", "ejemplo_cumple", "ejemplo_no_cumple")
 CAMPOS_OBLIGATORIOS = ("id", "categoria", *CAMPOS_TEXTO, "severidad", "aplica_a", "estado")
 CAMPOS_PERMITIDOS = frozenset((*CAMPOS_OBLIGATORIOS, "reemplazado_por"))
-CABECERA_OBLIGATORIA = ("version", "fecha", "categorias", "sistemas", "tipos_hu", "criterios")
+CABECERA_OBLIGATORIA = ("version", "fecha", "categorias", "sistemas", "tipos_hu",
+                        "formato_criterios_aceptacion", "criterios")
 
 
 class CatalogoInvalido(Exception):
@@ -102,11 +106,15 @@ class Catalogo:
     categorias: tuple[str, ...]
     sistemas: tuple[str, ...]
     _tipos_hu: tuple[str, ...]
+    _formato_criterios: str
     criterios: tuple[Criterio, ...]
 
     # ------------------------------------------------------------ FuenteReglas
     def tipos_hu(self) -> list[str]:
         return list(self._tipos_hu)
+
+    def formato_criterios_aceptacion(self) -> str:
+        return self._formato_criterios
 
     def ids_defectos_aplicables(self, sistema: str) -> set[str]:
         return {c.id for c in self.aplicables(sistema)}
@@ -158,7 +166,7 @@ def _validar_lista(nombre: str, valor, errores: list[str]) -> tuple[str, ...]:
     return tuple(valor)
 
 
-def _validar_cabecera(datos: dict, errores: list[str]) -> tuple[str, str, tuple, tuple, tuple]:
+def _validar_cabecera(datos: dict, errores: list[str]) -> tuple[str, str, tuple, tuple, tuple, str]:
     for campo in CABECERA_OBLIGATORIA:
         if campo not in datos:
             errores.append(f"cabecera: falta el campo obligatorio '{campo}'.")
@@ -185,7 +193,11 @@ def _validar_cabecera(datos: dict, errores: list[str]) -> tuple[str, str, tuple,
     if TODOS in sistemas:
         errores.append(f"cabecera, campo 'sistemas': '{TODOS}' es reservado; no lo declares como sistema.")
     tipos = _validar_lista("tipos_hu", datos.get("tipos_hu"), errores) if "tipos_hu" in datos else ()
-    return str(version), str(fecha), categorias, sistemas, tipos
+    formato = datos.get("formato_criterios_aceptacion")
+    if "formato_criterios_aceptacion" in datos and formato not in FORMATOS_CRITERIOS:
+        errores.append(f"cabecera, campo 'formato_criterios_aceptacion': '{formato}' no es válido; "
+                       f"usa {' o '.join(FORMATOS_CRITERIOS)}.")
+    return str(version), str(fecha), categorias, sistemas, tipos, str(formato)
 
 
 def _validar_criterio(i: int, r, categorias, sistemas, errores: list[str]) -> Criterio | None:
@@ -276,7 +288,7 @@ def cargar_catalogo(ruta: Path | str = RUTA_POR_DEFECTO) -> Catalogo:
         raise CatalogoInvalido(ruta, ["el archivo debe tener una cabecera (version, fecha, …) y la lista 'criterios'."])
 
     errores: list[str] = []
-    version, fecha, categorias, sistemas, tipos = _validar_cabecera(datos, errores)
+    version, fecha, categorias, sistemas, tipos, formato = _validar_cabecera(datos, errores)
 
     crudos = datos.get("criterios")
     criterios: list[Criterio] = []
@@ -305,5 +317,6 @@ def cargar_catalogo(ruta: Path | str = RUTA_POR_DEFECTO) -> Catalogo:
         raise CatalogoInvalido(ruta, errores)
     return Catalogo(
         ruta=ruta, version=version, fecha=fecha, hash_sha256=hashlib.sha256(contenido).hexdigest(),
-        categorias=categorias, sistemas=sistemas, _tipos_hu=tipos, criterios=tuple(criterios),
+        categorias=categorias, sistemas=sistemas, _tipos_hu=tipos, _formato_criterios=formato,
+        criterios=tuple(criterios),
     )

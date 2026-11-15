@@ -50,13 +50,40 @@ def rol_de(texto: str) -> str | None:
     return _ARTICULOS.sub("", rol)
 
 
-# ===================================================================== Gherkin
+# ===================================================================== criterios de aceptación
+# El formato lo fija el catálogo (`formato_criterios_aceptacion`), no este módulo: aquí solo se
+# sabe validar cada formato posible (D-027).
 _PATRON_GHERKIN = re.compile(r"\bdado\b.*\bcuando\b.*\bentonces\b", re.IGNORECASE | re.DOTALL)
+MIN_PALABRAS_CRITERIO = 4
+
+DESCRIPCION_FORMATO = {
+    "lista": ("como reglas o lista de verificación: un criterio por elemento, cada uno con un resultado "
+              "observable (por ejemplo: 'Si el PIN actual es incorrecto 3 veces, la operación se bloquea')"),
+    "gherkin": "en Gherkin, en español: 'Dado …, cuando …, entonces …'",
+}
 
 
 def es_gherkin(criterio: str) -> bool:
     """True si contiene, en este orden, Dado … Cuando … Entonces (Gherkin en español)."""
     return _PATRON_GHERKIN.search(criterio) is not None
+
+
+def error_formato_criterio(i: int, criterio: str, formato: str) -> str | None:
+    """
+    Devuelve el error de formato de un criterio, o None si es válido.
+
+    Con 'lista' no se puede verificar automáticamente que el resultado sea observable; se exige
+    al menos una oración con contenido (un criterio de dos palabras no se puede comprobar).
+    """
+    if formato == "gherkin":
+        if not es_gherkin(criterio):
+            return (f"criterios_aceptacion[{i}]: no está en Gherkin; debe contener, en este orden, "
+                    f"'Dado …', 'Cuando …' y 'Entonces …'.")
+        return None
+    if len(criterio.split()) < MIN_PALABRAS_CRITERIO:
+        return (f"criterios_aceptacion[{i}]: es demasiado corto para comprobarlo; escribe una regla o "
+                f"punto de verificación con un resultado observable.")
+    return None
 
 
 # ===================================================================== datos personales
@@ -150,6 +177,7 @@ def validar_revision(
     sistema: str,
     tipos_validos: Sequence[str],
     defectos_validos: set[str],
+    formato_criterios: str,
 ) -> list[str]:
     """Reglas de `registrar_revision`. Devuelve la lista completa de errores (vacía si es válida)."""
     errores: list[str] = []
@@ -204,7 +232,7 @@ def validar_revision(
             )
         errores += errores_datos_personales("historia_refinada", historia_refinada)
 
-    # ---- criterios de aceptación: siempre en Gherkin
+    # ---- criterios de aceptación: en el formato que fija el catálogo
     if len(criterios_aceptacion) > dominio.MAX_CRITERIOS_ACEPTACION:
         errores.append(
             f"criterios_aceptacion: hay {len(criterios_aceptacion)}; el máximo es {dominio.MAX_CRITERIOS_ACEPTACION}."
@@ -214,11 +242,9 @@ def validar_revision(
             errores.append(
                 f"criterios_aceptacion[{i}]: tiene {len(c)} caracteres; el máximo es {dominio.MAX_CRITERIO_ACEPTACION}."
             )
-        if not es_gherkin(c):
-            errores.append(
-                f"criterios_aceptacion[{i}]: no está en Gherkin; debe contener, en este orden, "
-                f"'Dado …', 'Cuando …' y 'Entonces …'."
-            )
+        error = error_formato_criterio(i, c, formato_criterios)
+        if error:
+            errores.append(error)
         errores += errores_datos_personales(f"criterios_aceptacion[{i}]", c)
 
     # ---- coherencia con la decisión
@@ -226,7 +252,8 @@ def validar_revision(
         if defectos:
             errores.append("decision 'aceptar' con defectos: si la HU tiene defectos, la decisión es 'devolver' o 'dividir'.")
         if not criterios_aceptacion:
-            errores.append("decision 'aceptar' sin criterios_aceptacion: incluye al menos un criterio en Gherkin.")
+            errores.append("decision 'aceptar' sin criterios_aceptacion: incluye al menos un criterio "
+                           f"{DESCRIPCION_FORMATO[formato_criterios]}.")
         if not historia_refinada.strip():
             errores.append("decision 'aceptar' sin historia_refinada: incluye la HU en formato 'Como…, quiero…, para…'.")
     elif decision == "devolver":

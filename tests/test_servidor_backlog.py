@@ -9,6 +9,7 @@ import pytest
 
 from conftest import llamar, listar
 
+CRITERIO = "Si el cliente activó la biometría, al abrir la app ingresa sin escribir la contraseña."
 GHERKIN = "Dado que el cliente activó la biometría, cuando abre la app, entonces ingresa sin contraseña."
 HU_OK = "Como cliente de banca móvil, quiero ingresar con mi huella, para no escribir la contraseña."
 
@@ -23,7 +24,7 @@ def _revision(**cambios):
         "defectos": [],
         "recomendaciones": [],
         "historia_refinada": HU_OK,
-        "criterios_aceptacion": [GHERKIN],
+        "criterios_aceptacion": [CRITERIO],
     }
     return {**base, **cambios}
 
@@ -193,11 +194,11 @@ RECHAZOS = {
     "aceptar con defectos": (_revision(defectos=["PRB-001"]), "decision 'aceptar' con defectos"),
     "aceptar sin criterios": (_revision(criterios_aceptacion=[]), "decision 'aceptar' sin criterios_aceptacion"),
     "aceptar sin historia refinada": (_revision(historia_refinada=""), "decision 'aceptar' sin historia_refinada"),
-    "criterio que no es Gherkin": (
-        _revision(criterios_aceptacion=["El cliente entra con la huella."]), "criterios_aceptacion[0]: no está en Gherkin"),
+    "criterio demasiado corto (formato lista)": (
+        _revision(criterios_aceptacion=["Entra bien."]), "criterios_aceptacion[0]: es demasiado corto para comprobarlo"),
     "criterio demasiado largo": (
-        _revision(criterios_aceptacion=[GHERKIN + "x" * 1000]), "criterios_aceptacion[0]: tiene"),
-    "demasiados criterios": (_revision(criterios_aceptacion=[GHERKIN] * 13), "el máximo es 12"),
+        _revision(criterios_aceptacion=[CRITERIO + "x" * 1000]), "criterios_aceptacion[0]: tiene"),
+    "demasiados criterios": (_revision(criterios_aceptacion=[CRITERIO] * 13), "el máximo es 12"),
     "devolver sin defectos": (_devolver(defectos=[], recomendaciones=[]), "decision 'devolver' sin defectos"),
     "devolver sin recomendaciones": (_devolver(recomendaciones=[]), "decision 'devolver' sin recomendaciones"),
     "recomendacion con defecto no reportado": (
@@ -357,3 +358,32 @@ def test_con_el_catalogo_real_el_servidor_usa_sus_tipos_y_defectos(tmp_path):
     # …pero no para una HU de core.
     r = llamar(srv, "registrar_revision", _devolver(id="HU-007", defectos=[bm], recomendaciones=recs))
     assert r.es_error and "no son criterios activos que apliquen al sistema 'core'" in r.texto
+
+
+# ===================================================================== formato de criterios (D-027)
+def test_con_formato_lista_se_acepta_una_regla_y_tambien_un_gherkin(servidor):
+    """El formato 'lista' no prohíbe Gherkin: solo exige un criterio comprobable."""
+    assert not llamar(servidor, "registrar_revision", _revision(criterios_aceptacion=[CRITERIO, GHERKIN])).es_error
+
+
+def test_con_formato_gherkin_se_exige_gherkin_sin_cambiar_codigo(backlog, reglas):
+    from revisor.servidores.servidor_backlog import crear_servidor
+
+    reglas.formato = "gherkin"
+    srv = crear_servidor(backlog, reglas)
+    r = llamar(srv, "registrar_revision", _revision(criterios_aceptacion=[CRITERIO]))
+    assert r.es_error and "criterios_aceptacion[0]: no está en Gherkin" in r.texto
+    assert not llamar(srv, "registrar_revision", _revision(criterios_aceptacion=[GHERKIN])).es_error
+
+
+@pytest.mark.parametrize("formato, esperado, ausente", [
+    ("lista", "reglas o lista de verificación", "Gherkin"),
+    ("gherkin", "Gherkin", "lista de verificación"),
+])
+def test_la_descripcion_de_la_herramienta_sigue_al_catalogo(backlog, reglas, formato, esperado, ausente):
+    from revisor.servidores.servidor_backlog import crear_servidor
+
+    reglas.formato = formato
+    desc = next(t for t in listar(crear_servidor(backlog, reglas)) if t.name == "registrar_revision")
+    texto = desc.description + desc.input_schema["properties"]["criterios_aceptacion"]["description"]
+    assert esperado in texto and ausente not in texto

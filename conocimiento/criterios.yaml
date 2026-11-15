@@ -13,12 +13,18 @@
 #
 # ESTADO: BORRADOR v0. Se valida después con los líderes técnicos del banco.
 
-version: "0.1.0"
-fecha: 2026-11-09
+version: "0.2.0"
+fecha: 2026-11-14
 
 categorias: [qus, invest, dor, banca_movil]
 sistemas: [banca_movil, core]
 tipos_hu: [funcional]
+
+# Formato que se exige a los criterios de aceptación que escribe el agente:
+#   lista   = una regla o punto de verificación por elemento, con resultado observable
+#   gherkin = "Dado …, cuando …, entonces …"
+# Cambiarlo es editar esta línea; no hay que tocar código ni la Skill (D-027).
+formato_criterios_aceptacion: lista
 
 criterios:
 
@@ -171,8 +177,8 @@ criterios:
     categoria: invest
     nombre: Verificable
     descripcion: La HU tiene criterios de aceptación que permiten comprobar, sin interpretación, si está terminada.
-    como_verificar: Verificar que existan criterios de aceptación concretos (idealmente en Gherkin Dado/Cuando/Entonces) con resultados observables.
-    ejemplo_cumple: "Dado que el cliente tiene saldo suficiente, cuando confirma la transferencia, entonces ve el comprobante con número de referencia."
+    como_verificar: Verificar que la HU traiga criterios de aceptación, como reglas o lista de verificación, y que cada uno tenga un resultado observable que se pueda comprobar sin interpretación. Si no trae criterios, o son vagos, no cumple.
+    ejemplo_cumple: "Criterios: 1) Con saldo suficiente, la transferencia se confirma y se muestra el comprobante con número de referencia. 2) Con saldo insuficiente, no se procesa y se muestra el saldo disponible."
     ejemplo_no_cumple: La transferencia debe funcionar bien.
     severidad: bloqueante
     aplica_a: [todos]

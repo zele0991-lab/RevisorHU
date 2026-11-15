@@ -50,6 +50,11 @@ def test_los_tipos_de_hu_salen_del_catalogo(real):
     assert real.tipos_hu() == ["funcional"]
 
 
+def test_el_formato_de_criterios_sale_del_catalogo(real):
+    """D-027: hoy reglas o lista de verificación; pasar a Gherkin es editar el YAML."""
+    assert real.formato_criterios_aceptacion() == "lista"
+
+
 def test_hash_sha256_de_los_bytes_del_archivo(real, tmp_path):
     assert real.hash_sha256 == hashlib.sha256(RUTA_REAL.read_bytes()).hexdigest()
     copia = tmp_path / "c.yaml"
@@ -69,7 +74,7 @@ def _criterio(id, **cambios):
 
 BASE = {
     "version": "1.0.0", "fecha": "2026-11-09", "categorias": ["dor", "banca_movil"],
-    "sistemas": ["banca_movil", "core"], "tipos_hu": ["funcional"],
+    "sistemas": ["banca_movil", "core"], "tipos_hu": ["funcional"], "formato_criterios_aceptacion": "lista",
     "criterios": [_criterio("DOR-001"), _criterio("BM-001", categoria="banca_movil", aplica_a=["banca_movil"])],
 }
 
@@ -132,6 +137,12 @@ ROTOS = {
     "todos como sistema": (_con(lambda d: d["sistemas"].append("todos")), "'todos' es reservado"),
     "sin tipos de HU": (_con(lambda d: d.update(tipos_hu=[])), "campo 'tipos_hu': debe ser una lista no vacía"),
     "lista de criterios vacía": (_con(lambda d: d.update(criterios=[])), "campo 'criterios': debe ser una lista no vacía"),
+    "formato de criterios inválido": (
+        _con(lambda d: d.update(formato_criterios_aceptacion="bdd")),
+        "campo 'formato_criterios_aceptacion': 'bdd' no es válido"),
+    "sin formato de criterios": (
+        _con(lambda d: d.pop("formato_criterios_aceptacion")),
+        "cabecera: falta el campo obligatorio 'formato_criterios_aceptacion'"),
     "campo de cabecera desconocido": (_con(lambda d: d.update(autor="x")), "cabecera: campos desconocidos: autor"),
 }
 

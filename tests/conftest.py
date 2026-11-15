@@ -25,6 +25,7 @@ class ReglasFalsas:
 
     def __init__(self):
         self.tipos = ["funcional"]
+        self.formato = "lista"
         self.por_sistema = {
             "todos": {"PRB-001", "PRB-002", "PRB-003"},
             "banca_movil": {"PRB-BM-001"},
@@ -33,6 +34,9 @@ class ReglasFalsas:
 
     def tipos_hu(self) -> list[str]:
         return list(self.tipos)
+
+    def formato_criterios_aceptacion(self) -> str:
+        return self.formato
 
     def ids_defectos_aplicables(self, sistema: str) -> set[str]:
         return self.por_sistema["todos"] | self.por_sistema.get(sistema, set())

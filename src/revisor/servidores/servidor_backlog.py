@@ -78,6 +78,8 @@ def crear_servidor(backlog: PuertoBacklog, reglas: FuenteReglas) -> MCPServer:
     revisadas: set[str] = set()
     divididas: set[str] = set()
     tipos = reglas.tipos_hu()
+    formato = reglas.formato_criterios_aceptacion()
+    como_escribir_criterios = validacion.DESCRIPCION_FORMATO[formato]
 
     def _historia(id: str) -> Historia:
         if not id.strip() or len(id) > dominio.MAX_ID:
@@ -159,7 +161,7 @@ def crear_servidor(backlog: PuertoBacklog, reglas: FuenteReglas) -> MCPServer:
             "Úsala UNA sola vez, al final, cuando ya evaluaste todos los criterios aplicables. Reglas que "
             "valida el servidor: 'defectos' son ids de criterios activos que aplican al sistema de la HU "
             "(obtenlos con listar_criterios); si aceptas, no hay defectos, incluyes historia_refinada y al "
-            "menos un criterio de aceptación en Gherkin (Dado/Cuando/Entonces); si devuelves, hay al menos "
+            f"menos un criterio de aceptación, escrito {como_escribir_criterios}; si devuelves, hay al menos "
             "un defecto y cada recomendación referencia uno de ellos; la historia refinada sigue el formato "
             "'Como…, quiero…, para…'; no se permiten datos personales (correos, cédulas, teléfonos, cuentas "
             f"o tarjetas). Tipos de HU válidos: {', '.join(tipos)}."
@@ -191,7 +193,7 @@ def crear_servidor(backlog: PuertoBacklog, reglas: FuenteReglas) -> MCPServer:
         ],
         criterios_aceptacion: Annotated[
             list[str],
-            Field(description=f"Criterios en Gherkin (Dado … Cuando … Entonces …). Al menos uno si aceptas. "
+            Field(description=f"Criterios de aceptación, escritos {como_escribir_criterios}. Al menos uno si aceptas. "
                               f"Máximo {dominio.MAX_CRITERIOS_ACEPTACION}."),
         ],
     ) -> str:
@@ -211,6 +213,7 @@ def crear_servidor(backlog: PuertoBacklog, reglas: FuenteReglas) -> MCPServer:
             sistema=h.sistema,
             tipos_validos=tipos,
             defectos_validos=reglas.ids_defectos_aplicables(h.sistema),
+            formato_criterios=formato,
         )
         if errores:
             raise rechazo("registrar_revision", errores)

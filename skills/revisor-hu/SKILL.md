@@ -70,8 +70,9 @@ como vienen.
   pregunta tiene que responder el analista. Una recomendación por defecto basta.
 - **Historia refinada:** obligatoria si aceptas, opcional si devuelves o divides. Formato
   "Como <rol>, quiero <acción>, para <beneficio>", en español, sin agregar alcance nuevo.
-- **Criterios de aceptación:** al aceptar, al menos uno. Siempre en Gherkin y en español
-  ("Dado …, cuando …, entonces …"), con resultados observables.
+- **Criterios de aceptación:** al aceptar, al menos uno. En español, con resultados observables
+  y en el formato que indica la descripción de `backlog__registrar_revision` (el formato lo fija
+  el catálogo, no esta Skill).
 - **Partes de una división:** todas con el mismo rol, cada una con un solo objetivo y en el
   formato de HU.
 - **Datos personales:** nunca escribas correos, cédulas, teléfonos, números de cuenta o de

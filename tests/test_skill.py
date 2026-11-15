@@ -94,3 +94,8 @@ def test_las_dos_configuraciones_solo_difieren_en_el_prompt():
     assert set(config["prompts"]) == {"skill", "base"}
     texto = json.dumps({k: v for k, v in config.items() if k != "prompts"})
     assert "SKILL.md" not in texto and "instrucciones_base" not in texto
+
+
+def test_la_skill_no_fija_el_formato_de_los_criterios(skill):
+    """D-027: el formato es un dato del catálogo; si la Skill lo nombrara, cambiarlo exigiría editarla."""
+    assert "Gherkin" not in skill and "lista de verificación" not in skill

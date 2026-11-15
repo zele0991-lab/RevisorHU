@@ -11,7 +11,7 @@ Es el contrato con la fase F7 (Kiro):
     `BacklogAzureDevOps` implementa esta clase sin modificar el resto del repositorio.
 
 Reparto de responsabilidades:
-    - El SERVIDOR MCP valida (decisión permitida, ids de defectos del catálogo, Gherkin,
+    - El SERVIDOR MCP valida (decisión permitida, ids de defectos del catálogo, formato de criterios,
       datos personales, longitudes, una revisión por HU y ejecución). Así la validación es
       igual para cualquier backend y el servidor no confía en el agente.
     - El PUERTO solo lee y persiste. No decide si una revisión es válida.

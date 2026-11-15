@@ -38,7 +38,9 @@ Todas las partes conservan el rol de la historia original.
 
 ## Verificable
 Hay criterios de aceptación que permiten saber, sin interpretación, si la historia está
-terminada. En este proyecto se escriben en Gherkin: "Dado … cuando … entonces …".
+terminada. En este proyecto se escriben como reglas o lista de verificación, cada una con un
+resultado observable. El formato lo fija el catálogo (`formato_criterios_aceptacion`) y puede
+cambiarse a Gherkin ("Dado … cuando … entonces …") sin tocar código.
 
 ## Referencia
 Wake, B. (2003). *INVEST in Good Stories, and SMART Tasks*. XP123.

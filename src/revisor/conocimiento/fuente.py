@@ -21,6 +21,10 @@ class FuenteReglas(Protocol):
         """Tipos de HU válidos (lista cerrada, definida en el catálogo)."""
         ...
 
+    def formato_criterios_aceptacion(self) -> str:
+        """Formato exigido a los criterios de aceptación: 'lista' o 'gherkin' (definido en el catálogo)."""
+        ...
+
     def ids_defectos_aplicables(self, sistema: str) -> set[str]:
         """Ids de criterios ACTIVOS que aplican al sistema (`aplica_a` = todos o ese sistema)."""
         ...

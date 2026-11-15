@@ -17,7 +17,7 @@ puede transferir.
 Una historia está lista cuando:
 - está bien escrita (rol, acción y beneficio) y expresa un solo objetivo;
 - no es ambigua, no está duplicada y no entra en conflicto con otra;
-- tiene criterios de aceptación verificables en Gherkin;
+- tiene criterios de aceptación verificables (reglas o lista de verificación);
 - el equipo puede estimarla y mide 8 puntos o menos;
 - las dependencias, las reglas de negocio y los requisitos no funcionales relevantes están
   identificados;
@@ -35,8 +35,8 @@ Las reglas se aplican en este orden:
 3. **Devolver** si incumple **cualquier** criterio que aplique a su sistema, sea cual sea su
    severidad. Cada recomendación dice qué corregir y apunta a un criterio concreto. Si falta
    información, se devuelve con **preguntas**; no se inventan requisitos.
-4. **Aceptar** solo si cumple todos los criterios que aplican. Se entrega refinada y con criterios
-   en Gherkin.
+4. **Aceptar** solo si cumple todos los criterios que aplican. Se entrega refinada y con sus
+   criterios de aceptación en el formato que fija el catálogo.
 
 La severidad no cambia la decisión: sirve para ordenar las correcciones (primero las
 bloqueantes). Esta regla es la misma para el agente y para las personas que etiquetan el
