@@ -1,0 +1,276 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Crear `src/revisor/backlog/azure_devops.py` con la función `_sanear_html`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857389052
+      },
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857394782
+      },
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794858199301
+      }
+    ],
+    "1.2 Escribir pruebas parametrizadas de `_sanear_html` en `tests/test_azure_devops.py`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857389759
+      },
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794858201833
+      },
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794858536474
+      }
+    ],
+    "2.1 Añadir en `azure_devops.py` el protocolo `ClienteHTTP` y la implementación real": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857389936
+      },
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794858203826
+      },
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794858538860
+      }
+    ],
+    "2.2 Crear `ClienteHTTPFalso` en `tests/test_azure_devops.py`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390026
+      },
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794858541179
+      }
+    ],
+    "3.1 Implementar `BacklogAzureDevOps` y su método de clase `desde_configuracion`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390066
+      },
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794858543495
+      }
+    ],
+    "3.2 Escribir pruebas de construcción del adaptador": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390113
+      }
+    ],
+    "4.1 Implementar `leer_historia` en `BacklogAzureDevOps`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390159
+      }
+    ],
+    "4.2 Escribir pruebas de `leer_historia` y de la Propiedad 4 (filtrado de campos de autor)": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390198
+      }
+    ],
+    "5.1 Implementar política de reintentos en `_ClienteHTTPReal` y en el adaptador": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390301
+      }
+    ],
+    "5.2 Escribir pruebas de resiliencia HTTP y Propiedad 6 (PAT ausente en errores)": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390344
+      }
+    ],
+    "6.1 Implementar `buscar_similares` en `BacklogAzureDevOps`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390390
+      }
+    ],
+    "6.2 Escribir pruebas de `buscar_similares`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390433
+      }
+    ],
+    "7.1 Implementar `listar_pendientes` en `BacklogAzureDevOps`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390481
+      }
+    ],
+    "7.2 Escribir pruebas de `listar_pendientes`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390532
+      }
+    ],
+    "8.1 Implementar `registrar_revision` en `BacklogAzureDevOps`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390584
+      }
+    ],
+    "8.2 Escribir pruebas de `registrar_revision` y Propiedades 7, 8 y 9": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390631
+      }
+    ],
+    "9.1 Implementar `proponer_division` en `BacklogAzureDevOps`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390681
+      }
+    ],
+    "9.2 Implementar `aprobar_para_fabrica` en `BacklogAzureDevOps`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390738
+      }
+    ],
+    "9.3 Escribir pruebas de `proponer_division` y `aprobar_para_fabrica`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390782
+      }
+    ],
+    "10.1 Crear `datos/ataques/ataque_comentario_html.json`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390830
+      }
+    ],
+    "10.2 Escribir prueba de la muestra de ataque": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390880
+      }
+    ],
+    "11. Checkpoint — Pruebas del adaptador en verde": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390927
+      }
+    ],
+    "12.1 Implementar `AprobadorDesatendido` en `src/revisor/integracion/poller_azure.py`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857390966
+      }
+    ],
+    "12.2 Escribir pruebas de `AprobadorDesatendido` en `tests/test_poller_azure.py`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857391007
+      }
+    ],
+    "13.1 Implementar el ciclo principal del Poller en `poller_azure.py`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857391076
+      }
+    ],
+    "13.2 Implementar gestión del `Registro_Procesados` en el Poller": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857391125
+      }
+    ],
+    "13.3 Escribir pruebas del Poller y Propiedades 11 y 12": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857391165
+      }
+    ],
+    "14. Checkpoint — Todas las pruebas en verde": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857391208
+      }
+    ],
+    "15.1 Actualizar `docs/ARQUITECTURA.md`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857391247
+      }
+    ],
+    "15.2 Actualizar `docs/DECISIONES.md`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857391293
+      }
+    ],
+    "15.3 Actualizar `README.md` con la sección \"Azure DevOps\"": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857391341
+      }
+    ],
+    "15.4 Actualizar `docs/USO_IA.md`": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794857391377
+      }
+    ],
+    "1. Implementar `_sanear_html` y sus pruebas parametrizadas": [
+      {
+        "executionId": "b84156db-5c27-4c97-b8f7-9f7337e37694",
+        "chatSessionId": "sess_447700a7-4ac0-485f-b9d7-4c121c02a587",
+        "timestamp": 1794858536530
+      }
+    ]
+  }
+}

@@ -9,7 +9,7 @@ flowchart LR
     subgraph Entradas
         CLI["CLI revisar<br/>--caso ID --config skill|base"]
         EXP["experimentos/ejecutar.py<br/>3 repeticiones por config"]
-        POLL["poller_azure.py (F7)<br/>WIQL cada N minutos"]
+        POLL["poller_azure.py (F7)<br/>cada N minutos o --una-vez"]
     end
 
     subgraph Host["Host del agente (src/revisor/agente)"]
@@ -29,7 +29,8 @@ flowchart LR
 
     PUERTO["PuertoBacklog<br/>backlog/puerto.py"]
     LOCAL[("BacklogLocal<br/>JSON")]
-    AZDO[("BacklogAzureDevOps (F7)<br/>comentario + etiquetas")]
+    AZDO["BacklogAzureDevOps (F7)<br/>sanea HTML · comentario + System.Tags"]
+    BOARDS[("Azure DevOps Boards<br/>API REST 7.1")]
     CAT["catalogo.py<br/>carga y valida"]
     YAML[("conocimiento/criterios.yaml<br/>única fuente de reglas")]
     TAWOS[("Referencias TAWOS<br/>story points reales")]
@@ -38,7 +39,9 @@ flowchart LR
 
     CLI --> BUCLE
     EXP --> BUCLE
-    POLL --> BUCLE
+    POLL -->|"asyncio.run(ejecutar) por HU<br/>aprobador desatendido"| BUCLE
+    POLL -->|"listar_pendientes (directo, sin MCP)"| AZDO
+    AZDO -->|"WIQL · lote · comentarios · PATCH Tags"| BOARDS
     PROMPT --> BUCLE
     BUCLE <--> API
     BUCLE --> POL
@@ -48,7 +51,7 @@ flowchart LR
     BUCLE --> TRAZA
     SB --> PUERTO
     PUERTO --> LOCAL
-    PUERTO --> AZDO
+    PUERTO -->|"servidor_backlog --backend azure"| AZDO
     SB -->|ids de defectos válidos| CAT
     SC --> CAT
     CAT --> YAML

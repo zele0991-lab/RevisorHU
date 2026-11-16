@@ -24,7 +24,7 @@ El agente recibe una historia de usuario (HU) y hace lo siguiente:
 | F4 | `SKILL.md` y línea base | ✅ |
 | F5 | Conjunto de evaluación, ataques, etiquetado y kappa | pendiente |
 | F6 | Experimento, métricas y comando de reproducción | pendiente |
-| F7 | Conector de Azure DevOps y poller (Kiro) | preparado para Kiro: ver `docs/GUIA_AZURE_DEVOPS.md` |
+| F7 | Conector de Azure DevOps y poller (spec de Kiro, código de Kiro y Claude Code) | ✅ pruebas en verde; ver "Azure DevOps" abajo |
 
 ## Instalación (Windows, PowerShell)
 
@@ -62,6 +62,37 @@ revisar --caso HU-002 --config base
 - Cada ejecución deja una traza JSONL en `trazas/desarrollo/` (no se versiona). Para un resumen, usa el lector del kit: `python ../kit-clase3/agente/leer_traza.py trazas/desarrollo/*.jsonl`.
 - El código de salida es 0 solo si el agente terminó por sí mismo y registró una revisión.
 - El modelo, el `effort`, los límites, la política y los archivos de datos están en `config/config.json`.
+
+## Azure DevOps (F7)
+
+El poller busca User Stories nuevas (sin la etiqueta `ia-revisada`, creadas en los últimos 7 días) y ejecuta al agente sobre cada una. El agente deja **un comentario** con su recomendación (aceptar, devolver o dividir), los defectos, la historia refinada, los criterios propuestos y los story points sugeridos, y agrega las etiquetas `ia-revisada` e `ia-<decisión>`. **Nunca** aprueba, cambia el estado, asigna personas ni escribe el campo Story Points: la decisión es de una persona.
+
+Configuración (la organización de prueba se crea con `docs/GUIA_AZURE_DEVOPS.md`):
+
+| Variable en `.env` | Valor |
+|---|---|
+| `AZDO_ORG_URL` | `https://dev.azure.com/<organización>` |
+| `AZDO_PROJECT` | nombre del proyecto, por ejemplo `RevisorHU-Pruebas` |
+| `AZDO_PAT` | PAT con el alcance mínimo **Work Items: Read & write**. Nunca se pega en chats ni capturas. |
+| `ANTHROPIC_API_KEY` | solo para `--real` |
+
+```powershell
+# Simulado: un guion reemplaza al modelo (sin costo), pero lee y ESCRIBE de verdad en Azure DevOps
+python -m revisor.integracion.poller_azure --una-vez
+
+# Real: cuesta dinero, alrededor de US$0,15–0,25 por HU; --max-hu limita cuántas HU revisa
+python -m revisor.integracion.poller_azure --una-vez --real --max-hu 1
+
+# Sin --una-vez queda corriendo y revisa cada 15 minutos; se detiene con Ctrl+C
+python -m revisor.integracion.poller_azure --real
+
+# Demo en clase: revisa cada 20 segundos y una HU por ciclo
+python -m revisor.integracion.poller_azure --real --intervalo-segundos 20 --max-hu 1
+```
+
+- El resto de la configuración (mapeo Area Path → sistema, etiquetas, intervalo, máximo de HU por ciclo) está en `config/azure_devops.json`, sin secretos.
+- `estado/azure_procesados.json` recuerda qué HU ya se revisaron. Una HU que falla se reintenta una sola vez.
+- Las trazas quedan en `trazas/azure/`.
 
 ## Estructura
 
