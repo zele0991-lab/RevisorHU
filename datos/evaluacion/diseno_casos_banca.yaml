@@ -1,0 +1,178 @@
+# Conjunto bancario complementario (D-034).
+#
+# QUÉ ES: HU SINTÉTICAS de Banca Móvil en español, para medir también los criterios del sistema
+# banca_movil (autenticación, enmascarado, Ley 8968, SUGEF...), que el conjunto genérico de Dalpiaz
+# no ejercita. Se reporta APARTE del conjunto principal. Ninguna HU es del banco.
+#
+# Origen de cada caso:
+#   azure  la HU que ya se revisó en la organización de prueba de Azure DevOps (número de work item),
+#          con su texto limpio: las HU de ataque (5, 9 y 10) van al análisis de seguridad, no aquí,
+#          y de la 9 y la 10 se usa el texto que veía una persona (sin la instrucción oculta).
+#   nueva  escrita para este conjunto por Claude Code, para equilibrar las decisiones.
+#
+# IMPORTANTE PARA QUIEN ETIQUETA: no leas este archivo antes de etiquetar (`intencion_diseno` no es
+# la etiqueta). Se etiqueta con: python datos/etiquetar.py --anotador A --conjunto banca
+
+version: 1
+conjunto: banca
+
+casos:
+  - id: BAN-01
+    origen: azure 1
+    titulo: Ingreso con biometría
+    texto: Como cliente de banca móvil, quiero ingresar a la app con mi huella o reconocimiento facial, para no tener que escribir mi contraseña cada vez.
+    criterios_aceptacion:
+      - Dado que el cliente activó la biometría, cuando abre la app y valida su huella, entonces ingresa a la pantalla principal sin escribir la contraseña.
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: duplicada (BAN-03) y en conflicto (BAN-07); faltan reglas de seguridad de la biometría
+  - id: BAN-02
+    origen: azure 2
+    titulo: App más rápida
+    texto: Como usuario quiero que la app sea más rápida.
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: ambigua ("más rápida" sin medida) y sin beneficio
+  - id: BAN-03
+    origen: azure 3
+    titulo: Login biométrico
+    texto: Como cliente de banca móvil, quiero entrar a la aplicación usando mi huella dactilar o mi rostro, para no escribir la contraseña cada vez que ingreso.
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: duplicada de BAN-01
+  - id: BAN-04
+    origen: azure 4
+    titulo: Transferencias, historial y notificaciones
+    texto: Como cliente, quiero hacer transferencias a terceros, ver el historial de los últimos 12 meses con filtros por monto y fecha, exportarlo a PDF y recibir notificaciones push de cada movimiento, para manejar mis finanzas desde el celular.
+    intencion_diseno: dividir
+    es_dificil: true
+    motivo_dificultad: cuatro objetivos entregables por separado
+  - id: BAN-05
+    origen: azure 6
+    titulo: Actualizar librería de red
+    texto: Actualizar la librería de red de la app a la versión 5 y quitar el soporte de TLS 1.1.
+    intencion_diseno: devolver
+  - id: BAN-06
+    origen: azure 7
+    titulo: Consulta de saldo en ventanilla
+    sistema: core
+    texto: Como cajero de sucursal, quiero consultar el saldo disponible de una cuenta en tiempo real, para responder al cliente sin llamar a otra área.
+    criterios_aceptacion:
+      - Dado un número de cuenta válido, cuando el cajero lo consulta, entonces ve el saldo disponible y el saldo contable en menos de 2 segundos.
+    intencion_diseno: devolver
+  - id: BAN-07
+    origen: azure 8
+    titulo: Ingreso solo con PIN corto
+    texto: Como cliente de banca móvil, quiero desactivar la biometría y la contraseña para ingresar solo con un PIN de 4 dígitos, para entrar más rápido a la app.
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: en conflicto con BAN-01 y BAN-03 y debilita la autenticación
+  - id: BAN-08
+    origen: azure 9
+    titulo: Consulta de límites de tarjeta
+    texto: Como cliente de banca móvil, quiero consultar el límite disponible de mi tarjeta de crédito, para saber cuánto puedo gastar antes de pagar.
+    intencion_diseno: devolver
+  - id: BAN-09
+    origen: azure 10
+    titulo: Descarga de estado de cuenta
+    texto: Como cliente de banca móvil, quiero descargar mi estado de cuenta mensual en PDF, para presentarlo en trámites.
+    criterios_aceptacion:
+      - El PDF incluye los movimientos del mes seleccionado.
+      - El número de cuenta aparece enmascarado.
+    intencion_diseno: devolver
+  - id: BAN-10
+    origen: azure 11
+    titulo: Notificación de compras con tarjeta
+    texto: Como cliente de banca móvil, quiero recibir una notificación en mi teléfono cada vez que se haga una compra con mi tarjeta, para darme cuenta rápido si hay un cargo que no reconozco.
+    criterios_aceptacion:
+      - Llega una notificación cuando se aprueba una compra con la tarjeta.
+      - La notificación muestra el comercio y el monto.
+    intencion_diseno: devolver
+  - id: BAN-11
+    origen: azure 13
+    titulo: Pago de servicios públicos
+    texto: Como cliente de banca móvil, quiero pagar mis recibos de luz y agua desde la app con el saldo de mi cuenta, para no tener que ir a una agencia ni hacer fila en un comercio.
+    criterios_aceptacion:
+      - El cliente elige el servicio (luz o agua), ingresa el número de contrato y la app consulta el monto pendiente antes de pagar.
+      - Antes de confirmar se muestran el proveedor, el contrato, el monto y la cuenta de débito, con el número de cuenta enmascarado (solo los últimos 4 dígitos).
+      - El pago requiere autenticación con biometría o contraseña en el momento de confirmar.
+      - Si el saldo no alcanza, se muestra un mensaje claro y no se hace el débito.
+      - Si el contrato no existe o no tiene recibos pendientes, se informa sin permitir el pago.
+      - Si se pierde la conexión o el proveedor no responde en 30 segundos, el pago no se aplica y se informa al cliente que puede intentarlo de nuevo.
+      - Al pagar, se muestra un comprobante con número de referencia y fecha, que el cliente puede compartir.
+      - Cada pago queda en el registro de auditoría con fecha, hora y resultado.
+      - Funciona en iOS y Android, en las versiones que soporta la app.
+    intencion_diseno: aceptar
+  - id: BAN-12
+    origen: nueva
+    titulo: Ocultar saldos en la pantalla principal
+    texto: Como cliente de banca móvil, quiero ocultar los saldos de mis cuentas en la pantalla principal, para que nadie a mi alrededor los vea cuando abro la app en un lugar público.
+    criterios_aceptacion:
+      - En la pantalla principal hay un control "Ocultar saldos" que reemplaza cada saldo por "••••••".
+      - La preferencia se guarda en el dispositivo y se mantiene al cerrar y volver a abrir la app.
+      - Con los saldos ocultos, el cliente los ve tocando el control de nuevo, sin volver a autenticarse mientras la sesión esté activa.
+      - El control tiene una etiqueta accesible ("Mostrar u ocultar saldos") que leen VoiceOver y TalkBack.
+      - Sin conexión, el control sigue funcionando sobre los últimos saldos mostrados.
+      - Funciona igual en iOS y Android, en las versiones que soporta la app.
+    intencion_diseno: aceptar
+  - id: BAN-13
+    origen: nueva
+    titulo: Consulta de movimientos de cuenta
+    texto: Como cliente de banca móvil, quiero consultar los movimientos de mis cuentas de los últimos 90 días, para controlar en qué gasto mi dinero.
+    criterios_aceptacion:
+      - El cliente elige una de sus cuentas y ve sus movimientos de los últimos 90 días, del más reciente al más antiguo, con fecha, descripción, monto y saldo resultante.
+      - Se cargan 30 movimientos por vez y se cargan más al llegar al final de la lista.
+      - El número de cuenta se muestra enmascarado (solo los últimos 4 dígitos).
+      - Los movimientos los entrega el servicio de cuentas del core bancario; si no responde en 10 segundos, se muestra "No pudimos cargar tus movimientos, intenta de nuevo" con un botón para reintentar.
+      - Sin conexión, se muestra el mensaje de falta de conexión y no se muestran datos viejos como si fueran actuales.
+      - La consulta solo está disponible con la sesión activa; si la sesión expiró, la app pide autenticarse de nuevo.
+      - Los montos se leen correctamente con VoiceOver y TalkBack.
+      - Funciona en iOS y Android, en las versiones que soporta la app.
+    intencion_diseno: aceptar
+  - id: BAN-14
+    origen: nueva
+    titulo: Activar compras internacionales de tarjeta
+    texto: Como cliente de banca móvil, quiero activar y desactivar las compras internacionales de mi tarjeta de débito, para usarla cuando viajo y bloquearla cuando no la necesito.
+    criterios_aceptacion:
+      - El cliente ve el estado actual (activadas o desactivadas) de cada una de sus tarjetas de débito, con el número enmascarado (solo los últimos 4 dígitos).
+      - Para cambiar el estado, la app pide autenticación con biometría o contraseña.
+      - El cambio lo aplica el procesador de tarjetas; la app muestra el nuevo estado solo después de que el procesador lo confirma.
+      - Si el procesador no responde en 15 segundos, el estado no cambia y se informa al cliente que intente de nuevo.
+      - Cada cambio queda en el registro de auditoría con fecha, hora, tarjeta (enmascarada) y resultado.
+      - El cliente recibe una notificación push que confirma el cambio.
+      - Funciona en iOS y Android, en las versiones que soporta la app.
+    intencion_diseno: aceptar
+  - id: BAN-15
+    origen: nueva
+    titulo: Apertura de cuenta digital
+    texto: Como persona que no es cliente, quiero abrir una cuenta de ahorros desde la app, solicitar una tarjeta de débito virtual y activar el ingreso con biometría en el mismo proceso, para empezar a usar el banco sin ir a una sucursal.
+    intencion_diseno: dividir
+    es_dificil: true
+    motivo_dificultad: tres objetivos (apertura, tarjeta virtual y biometría) con regulación distinta
+  - id: BAN-16
+    origen: nueva
+    titulo: Beneficiarios y transferencias programadas
+    texto: Como cliente de banca móvil, quiero agregar, editar y eliminar beneficiarios de transferencias, y programar transferencias recurrentes a esos beneficiarios, para pagar mis compromisos mensuales sin hacerlo a mano.
+    criterios_aceptacion:
+      - Se puede agregar un beneficiario con su nombre y número de cuenta.
+      - Se puede programar una transferencia mensual a un beneficiario.
+    intencion_diseno: dividir
+    es_dificil: true
+    motivo_dificultad: gestión de beneficiarios y transferencias programadas son entregables distintos
+  - id: BAN-17
+    origen: nueva
+    titulo: Préstamo preaprobado
+    texto: Como cliente de banca móvil, quiero aceptar desde la app un préstamo personal preaprobado, para tener el dinero en mi cuenta de inmediato.
+    criterios_aceptacion:
+      - El cliente ve la oferta de préstamo y la acepta con un botón.
+      - El dinero se deposita en su cuenta.
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: varios defectos (sin monto, tasa ni plazo, sin autenticación ni información regulatoria)
+  - id: BAN-18
+    origen: nueva
+    titulo: Mostrar número completo de tarjeta
+    texto: Como cliente de banca móvil, quiero ver el número completo de mi tarjeta de crédito en la pantalla de inicio, para copiarlo rápido cuando compro en línea.
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: contradice la regla de enmascarado de datos sensibles

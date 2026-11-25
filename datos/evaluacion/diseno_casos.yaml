@@ -1,0 +1,339 @@
+# Diseño del conjunto de evaluación (F5, D-033).
+#
+# QUÉ ES: la receta con la que datos/construir_casos.py arma datos/evaluacion/casos.jsonl a partir
+# de las HU reales de Dalpiaz (CC BY 4.0, ver datos/LICENCIAS.md). Cada caso indica de qué línea
+# sale, qué se le modificó y por qué es difícil.
+#
+# IMPORTANTE PARA QUIEN ETIQUETA: no leas este archivo antes de etiquetar. El campo
+# `intencion_diseno` es la intención con la que se armó el caso (para balancear aceptar, devolver y
+# dividir), NO es la etiqueta. La etiqueta la pone una persona con datos/etiquetar.py, que no muestra
+# este campo. construir_casos.py tampoco lo copia a casos.jsonl.
+#
+# Operaciones:
+#   original       la HU tal cual está en Dalpiaz.
+#   con_criterios  la HU original más criterios de aceptación redactados para este conjunto
+#                  (Claude Code, revisados por el responsable). Cambio declarado por la licencia.
+#   combinada      dos o más HU del mismo proyecto unidas en una sola (candidatas a dividir).
+#                  Sus líneas de origen se quitan del backlog de contexto.
+#
+# Difíciles (marcadas antes de etiquetar): duplicado o conflicto con el backlog de contexto,
+# ambigüedad, varios defectos, o una HU que hay que dividir.
+
+version: 1
+sistema: todos            # las HU de Dalpiaz no son de Banca Móvil: aplican los criterios generales
+proyectos:
+  openspending: g05-openspending.txt
+  planningpoker: g13-planningpoker.txt
+  camperplus: g12-camperplus.txt
+  federalspending: g02-federalspending.txt
+
+casos:
+  # ------------------------------------------------------------------ OpenSpending
+  - id: EV-01
+    proyecto: openspending
+    lineas: [5]
+    operacion: con_criterios
+    intencion_diseno: aceptar
+    criterios_aceptacion:
+      - The Delete action is shown only on datasets owned by the logged-in Data Publishing User.
+      - Before deleting, a confirmation dialog shows the dataset title; nothing is deleted if the user cancels.
+      - After confirmation, the dataset no longer appears in search results, in the user's dataset list or in the API (the dataset URL returns 404).
+      - If the deletion fails, an error message is shown and the dataset remains unchanged.
+  - id: EV-02
+    proyecto: openspending
+    lineas: [95]
+    operacion: con_criterios
+    intencion_diseno: aceptar
+    criterios_aceptacion:
+      - The validator checks that the file has a header row, the same number of columns in every row, and numeric values in the columns mapped as amounts.
+      - Each error is reported with its row number, column name and a short explanation.
+      - A valid file shows the message "File is valid" and enables the Publish button; an invalid file keeps Publish disabled.
+      - Files up to 50 MB are validated in less than 30 seconds.
+  - id: EV-03
+    proyecto: openspending
+    lineas: [85]
+    operacion: con_criterios
+    intencion_diseno: aceptar
+    criterios_aceptacion:
+      - When adding a dataset, the user can choose Public or Hidden; Hidden is preselected.
+      - A Hidden dataset does not appear in search results, listings or embeddable visualisations for other users.
+      - The owner and Platform Administrators can still open a Hidden dataset from their dataset view.
+      - The owner can change a Hidden dataset to Public at any time, and it becomes searchable immediately.
+  - id: EV-04
+    proyecto: openspending
+    lineas: [17, 21, 23, 79]
+    operacion: combinada
+    intencion_diseno: dividir
+    es_dificil: true
+    motivo_dificultad: varios objetivos entregables por separado (importar Excel, JSON y Google Sheets, y actualización automática)
+    texto: As a Data Publishing User, I want to be able to import data in Excel, in JSON and from a Google Spreadsheet, and to have my dataset update automatically as the source file changes, So that I do not have to convert data formats and OpenSpending always shows current data.
+  - id: EV-05
+    proyecto: openspending
+    lineas: [37, 39, 41]
+    operacion: combinada
+    intencion_diseno: dividir
+    es_dificil: true
+    motivo_dificultad: tres funcionalidades de compartir en una sola HU
+    texto: As a Data Consuming User, I want to share a view state as a URL to social networks, download an image of a particular view state and share that image to the social networks that support it, So that I can use and share the data I have found.
+  - id: EV-06
+    proyecto: openspending
+    lineas: [63]
+    operacion: original
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: casi duplicada de otra HU del backlog (consultar varios datasets usando datos en vez de metadatos)
+  - id: EV-07
+    proyecto: openspending
+    lineas: [33]
+    operacion: original
+    intencion_diseno: devolver
+  - id: EV-08
+    proyecto: openspending
+    lineas: [91]
+    operacion: original
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: ambigua ("functioning" no dice qué operaciones debe cubrir el cliente)
+  - id: EV-09
+    proyecto: openspending
+    lineas: [47]
+    operacion: original
+    intencion_diseno: devolver
+  - id: EV-10
+    proyecto: openspending
+    lineas: [19]
+    operacion: original
+    intencion_diseno: devolver
+
+  # ------------------------------------------------------------------ Planning Poker
+  - id: EV-11
+    proyecto: planningpoker
+    lineas: [1]
+    operacion: con_criterios
+    intencion_diseno: aceptar
+    criterios_aceptacion:
+      - The game name is required and accepts 1 to 60 characters; the description is optional and accepts up to 500 characters.
+      - If the name is empty or too long, an error message is shown and the game is not created.
+      - After creating the game, the moderator sees the game page with the invitation URL ready to copy.
+  - id: EV-12
+    proyecto: planningpoker
+    lineas: [19]
+    operacion: con_criterios
+    intencion_diseno: aceptar
+    criterios_aceptacion:
+      - The transcript page has an "Export as CSV" option.
+      - The CSV file has one row per story with the columns story, final estimate and date estimated, in the order the stories were played.
+      - Stories that were not estimated appear with an empty final estimate.
+      - The file opens correctly in a spreadsheet tool, including stories with commas or accented characters.
+  - id: EV-13
+    proyecto: planningpoker
+    lineas: [37]
+    operacion: con_criterios
+    intencion_diseno: aceptar
+    criterios_aceptacion:
+      - Any participant can start the timer; it counts down from 2:00.
+      - All participants see the same remaining time, with at most one second of difference.
+      - When the timer reaches 0:00, every participant sees the message "Time is up"; the round is not closed automatically.
+      - If the timer is already running, starting it again restarts it at 2:00.
+  - id: EV-14
+    proyecto: planningpoker
+    lineas: [21, 22, 23, 24, 26]
+    operacion: combinada
+    intencion_diseno: dividir
+    es_dificil: true
+    motivo_dificultad: gestión completa de cuentas (crear, ingresar, editar, borrar y recordar contraseña) en una sola HU
+    texto: As a moderator, I want to create an account with my name, email address, password and username, log in with it, change my account details, delete my account and get a password reminder by email, so that I can use the application and keep my account under control.
+  - id: EV-15
+    proyecto: planningpoker
+    lineas: [14, 15, 16]
+    operacion: combinada
+    intencion_diseno: dividir
+    es_dificil: true
+    motivo_dificultad: importar, pegar y navegar juegos anteriores son objetivos distintos
+    texto: As a moderator, I want to import stories from a spreadsheet, copy and paste stories from a spreadsheet and browse through previous games, so that I can get started more quickly and find the game I am looking for.
+  - id: EV-16
+    proyecto: planningpoker
+    lineas: [41]
+    operacion: original
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: duplicada de otra HU del backlog (cambiar la estimación hasta que se muestren todas)
+  - id: EV-17
+    proyecto: planningpoker
+    lineas: [52]
+    operacion: original
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: en conflicto con otra HU (borrar un juego elimina sus historias y estimaciones)
+  - id: EV-18
+    proyecto: planningpoker
+    lineas: [48]
+    operacion: original
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: ambigua ("respond quickly" sin medida)
+  - id: EV-19
+    proyecto: planningpoker
+    lineas: [46]
+    operacion: original
+    intencion_diseno: devolver
+  - id: EV-20
+    proyecto: planningpoker
+    lineas: [53]
+    operacion: original
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: varios defectos (rol mal formado y "some metrics" sin definir)
+
+  # ------------------------------------------------------------------ CamperPlus
+  - id: EV-21
+    proyecto: camperplus
+    lineas: [28]
+    operacion: con_criterios
+    intencion_diseno: aceptar
+    criterios_aceptacion:
+      - Each scheduled task or activity has a Delete option visible only to camp administrators.
+      - Before deleting, the administrator confirms in a dialog that shows the activity name, group and date.
+      - After deletion, the activity disappears from the calendar and from the schedules seen by camp workers and parents.
+      - Activities that already took place cannot be deleted; the option is disabled with the message "Past activities are kept for records".
+  - id: EV-22
+    proyecto: camperplus
+    lineas: [36]
+    operacion: con_criterios
+    intencion_diseno: aceptar
+    criterios_aceptacion:
+      - The parent sees, for each enrolled child, the list of required consent forms.
+      - "Each form shows its status: Submitted (with the submission date) or Pending."
+      - Pending forms are listed first and include a link to submit them.
+      - A parent only sees the forms of their own children.
+  - id: EV-23
+    proyecto: camperplus
+    lineas: [40]
+    operacion: con_criterios
+    intencion_diseno: aceptar
+    criterios_aceptacion:
+      - For each enrolled child, the parent sees the name and photo of the counselor assigned for the current camp week.
+      - If the assignment changes, the parent sees the new counselor the next time the page is loaded.
+      - If no counselor is assigned yet, the page shows "Counselor not assigned yet".
+      - Counselor phone numbers and personal email addresses are not shown.
+  - id: EV-24
+    proyecto: camperplus
+    lineas: [15, 16, 21]
+    operacion: combinada
+    intencion_diseno: dividir
+    es_dificil: true
+    motivo_dificultad: datos de emergencia, de padres y fichas médicas en una sola HU
+    texto: As a camp administrator, I want to store campers' emergency information and their parent/guardian's information in a database and see their medical forms, so that I can notify the necessary parties and be prepared in case of an emergency or an allergy attack.
+  - id: EV-25
+    proyecto: camperplus
+    lineas: [26, 27, 35]
+    operacion: combinada
+    intencion_diseno: dividir
+    es_dificil: true
+    motivo_dificultad: ver grupos, programar actividades y filtrar el calendario son entregables distintos
+    texto: As a camp administrator, I want to see all my camp groups and their scheduled events, schedule tasks and activities for a specific group, and filter the event calendar by group, so that I can organize and track each group's activities.
+  - id: EV-26
+    proyecto: camperplus
+    lineas: [54]
+    operacion: original
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: duplicado exacto de otra HU del backlog
+  - id: EV-27
+    proyecto: camperplus
+    lineas: [31]
+    operacion: original
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: en conflicto con otra HU (conservar los registros de campistas de años anteriores)
+  - id: EV-28
+    proyecto: camperplus
+    lineas: [38]
+    operacion: original
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: ambigua y sin beneficio ("various type of forms")
+  - id: EV-29
+    proyecto: camperplus
+    lineas: [11]
+    operacion: original
+    intencion_diseno: devolver
+  - id: EV-30
+    proyecto: camperplus
+    lineas: [44]
+    operacion: original
+    intencion_diseno: devolver
+
+  # ------------------------------------------------------------------ Federal Spending
+  - id: EV-31
+    proyecto: federalspending
+    lineas: [65]
+    operacion: con_criterios
+    intencion_diseno: aceptar
+    criterios_aceptacion:
+      - The header information box shows the last update as date and time, for example "Updated 03/14/2018 4:05 PM".
+      - The time is shown in the user's local time zone, with the zone abbreviation.
+      - The value changes every time the submission is updated, without reloading the whole page.
+  - id: EV-32
+    proyecto: federalspending
+    lineas: [66]
+    operacion: con_criterios
+    intencion_diseno: aceptar
+    criterios_aceptacion:
+      - Only files with the .csv or .txt extension are accepted.
+      - If another extension is uploaded, the file is rejected before any validation runs and the message says which extension was received and which ones are accepted.
+      - The rejected file is not stored and does not appear in the submission history.
+  - id: EV-33
+    proyecto: federalspending
+    lineas: [84]
+    operacion: con_criterios
+    intencion_diseno: aceptar
+    criterios_aceptacion:
+      - A ZIP code with 5 digits passes the validation without errors or warnings.
+      - A ZIP code with 9 digits (ZIP+4) is still accepted.
+      - A ZIP code with any other number of digits, or with letters, produces the existing ZIP format error.
+  - id: EV-34
+    proyecto: federalspending
+    lineas: [70, 72, 85]
+    operacion: combinada
+    intencion_diseno: dividir
+    es_dificil: true
+    motivo_dificultad: dos cargas históricas distintas y la verificación de columnas en una sola HU
+    texto: As an Agency user, I want all historical Financial Assistance data and all historical FPDS data loaded for FABS go-live, including all necessary columns, so that the information in the database is correct and complete.
+  - id: EV-35
+    proyecto: federalspending
+    lineas: [30]
+    operacion: original
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: duplicado exacto de otra HU del backlog
+  - id: EV-36
+    proyecto: federalspending
+    lineas: [95, 87, 80]
+    operacion: combinada
+    intencion_diseno: dividir
+    es_dificil: true
+    motivo_dificultad: tres mejoras distintas del tablero y de la publicación en una sola HU
+    texto: As a FABS user, I want to see correct status labels and additional helpful information on the Submission Dashboard, and to know how many rows will be published before deciding whether to publish, so that I can better manage my submissions.
+  - id: EV-37
+    proyecto: federalspending
+    lineas: [1]
+    operacion: original
+    intencion_diseno: devolver
+  - id: EV-38
+    proyecto: federalspending
+    lineas: [45]
+    operacion: original
+    intencion_diseno: devolver
+  - id: EV-39
+    proyecto: federalspending
+    lineas: [78]
+    operacion: original
+    intencion_diseno: devolver
+    es_dificil: true
+    motivo_dificultad: varios defectos (beneficio circular y regla de relleno con ceros sin definir)
+  - id: EV-40
+    proyecto: federalspending
+    lineas: [9]
+    operacion: original
+    intencion_diseno: devolver

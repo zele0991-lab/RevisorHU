@@ -22,7 +22,7 @@ El agente recibe una historia de usuario (HU) y hace lo siguiente:
 | F2 | Catálogo de criterios, `servidor_conocimiento` y `servidor_estimacion` | ✅ |
 | F3 | Agente: bucle con el SDK, política, trazas, modo simulado y CLI `revisar` | ✅ |
 | F4 | `SKILL.md` y línea base | ✅ |
-| F5 | Conjunto de evaluación, ataques, etiquetado y kappa | pendiente |
+| F5 | Conjunto de evaluación, ataques, etiquetado y kappa | código ✅; falta el etiquetado (persona); ver "Conjunto de evaluación" abajo |
 | F6 | Experimento, métricas y comando de reproducción | pendiente |
 | F7 | Conector de Azure DevOps y poller (spec de Kiro, código de Kiro y Claude Code) | ✅ pruebas en verde; ver "Azure DevOps" abajo |
 
@@ -62,6 +62,28 @@ revisar --caso HU-002 --config base
 - Cada ejecución deja una traza JSONL en `trazas/desarrollo/` (no se versiona). Para un resumen, usa el lector del kit: `python ../kit-clase3/agente/leer_traza.py trazas/desarrollo/*.jsonl`.
 - El código de salida es 0 solo si el agente terminó por sí mismo y registró una revisión.
 - El modelo, el `effort`, los límites, la política y los archivos de datos están en `config/config.json`.
+
+## Conjunto de evaluación (F5)
+
+40 HU reales de 4 proyectos de Dalpiaz (2018), 19 de ellas difíciles, más 200 HU de contexto para que existan duplicados y conflictos. A 12 se les agregaron criterios de aceptación y 8 combinan varias HU (D-033). Los ataques de inyección (6 tipos) van aparte en `datos/ataques/`.
+
+```powershell
+python datos/descargar.py              # baja Dalpiaz y TAWOS a datos/crudos/ (no se versiona)
+python datos/construir_casos.py        # regenera casos.jsonl y backlog_contexto.jsonl
+python datos/etiquetar.py --anotador A --piloto   # etiquetado: lo hace una persona (guía en datos/guia_etiquetado.md)
+python datos/etiquetar.py --anotador A
+python experimentos/acuerdo.py         # etiquetas finales (y kappa si hay dos anotadores)
+```
+
+Los archivos generados ya están versionados: `descargar.py` solo hace falta para regenerarlos. Licencias y cambios declarados en `datos/LICENCIAS.md`.
+
+**Conjunto bancario complementario (D-034):** 18 HU sintéticas de Banca Móvil en español, donde sí se aplican los criterios BM. Se reporta aparte del principal.
+
+```powershell
+python datos/construir_casos.py --conjunto banca
+python datos/etiquetar.py --anotador A --conjunto banca
+python experimentos/acuerdo.py --conjunto banca
+```
 
 ## Azure DevOps (F7)
 
