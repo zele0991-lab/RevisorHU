@@ -149,6 +149,7 @@ async def ejecutar(op: Opciones) -> Resultado:
     modelos_vistos: list[str] = []
     fallback_usado = False
     revision = division = None
+    modelo = None
     motivo, error, paso = "limite_pasos", None, 0
     inicio = time.time()
 
@@ -243,6 +244,8 @@ async def ejecutar(op: Opciones) -> Resultado:
         except Exception as e:  # la traza siempre se cierra con su evento `fin`
             motivo, error = "error", f"{type(e).__name__}: {e}"
             di(f"   ERROR: {error}")
+        if hasattr(modelo, "cerrar"):
+            await modelo.cerrar()  # cierra el cliente HTTP dentro del mismo bucle de eventos
 
         duracion = round(time.time() - inicio, 2)
         contaminada = (not op.simulado) and (fallback_usado or any(m != modelo_pedido for m in modelos_vistos))

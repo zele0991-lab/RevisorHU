@@ -104,6 +104,15 @@ class ModeloClaude:
             params["betas"] = [BETA_FALLBACK]
         return params
 
+    async def cerrar(self) -> None:
+        """Cierra el cliente del SDK. Sin esto, al terminar asyncio.run aparece 'Event loop is closed'."""
+        cerrar = getattr(self.cliente, "close", None)
+        if cerrar is not None:
+            try:
+                await cerrar()
+            except Exception:  # cerrar nunca debe hacer fallar una ejecución que ya terminó
+                pass
+
     async def responder(self, sistema: str, mensajes: list, herramientas: list[dict]) -> Respuesta:
         r = await self.cliente.beta.messages.create(**self.parametros(sistema, mensajes, herramientas))
         u = r.usage

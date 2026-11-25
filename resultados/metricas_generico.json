@@ -1,0 +1,210 @@
+{
+  "conjunto": "generico",
+  "trazas": 10,
+  "configuraciones": {
+    "skill": {
+      "repeticiones": [
+        1
+      ],
+      "por_repeticion": {
+        "1": {
+          "casos": 5,
+          "con_traza": 5,
+          "sin_decision": 0,
+          "exactitud": 0.8,
+          "falsos_aceptar": 0.0,
+          "defectos_precision": 0.45,
+          "defectos_exhaustividad": 0.75,
+          "defectos_f1": 0.5625000000000001,
+          "tipo_exactitud": 1.0,
+          "estimacion_mae": 2.0,
+          "estimacion_a_un_paso": 1.0,
+          "tokens": 78199.2,
+          "costo_usd": 0.0046,
+          "duracion_s": 26.678000000000004,
+          "pasos": 5.6
+        }
+      },
+      "agregado": {
+        "exactitud": {
+          "media": 0.8,
+          "de": 0.0,
+          "n": 1
+        },
+        "falsos_aceptar": {
+          "media": 0.0,
+          "de": 0.0,
+          "n": 1
+        },
+        "defectos_precision": {
+          "media": 0.45,
+          "de": 0.0,
+          "n": 1
+        },
+        "defectos_exhaustividad": {
+          "media": 0.75,
+          "de": 0.0,
+          "n": 1
+        },
+        "defectos_f1": {
+          "media": 0.5625000000000001,
+          "de": 0.0,
+          "n": 1
+        },
+        "tipo_exactitud": {
+          "media": 1.0,
+          "de": 0.0,
+          "n": 1
+        },
+        "estimacion_mae": {
+          "media": 2.0,
+          "de": 0.0,
+          "n": 1
+        },
+        "estimacion_a_un_paso": {
+          "media": 1.0,
+          "de": 0.0,
+          "n": 1
+        },
+        "tokens": {
+          "media": 78199.2,
+          "de": 0.0,
+          "n": 1
+        },
+        "costo_usd": {
+          "media": 0.0046,
+          "de": 0.0,
+          "n": 1
+        },
+        "duracion_s": {
+          "media": 26.678000000000004,
+          "de": 0.0,
+          "n": 1
+        },
+        "pasos": {
+          "media": 5.6,
+          "de": 0.0,
+          "n": 1
+        },
+        "sin_decision": {
+          "media": 0.0,
+          "de": 0.0,
+          "n": 1
+        }
+      },
+      "confusion": {
+        "aceptar->aceptar": 1,
+        "aceptar->devolver": 1,
+        "devolver->devolver": 3
+      }
+    },
+    "base": {
+      "repeticiones": [
+        1
+      ],
+      "por_repeticion": {
+        "1": {
+          "casos": 5,
+          "con_traza": 5,
+          "sin_decision": 0,
+          "exactitud": 0.8,
+          "falsos_aceptar": 0.0,
+          "defectos_precision": 0.5,
+          "defectos_exhaustividad": 0.6666666666666666,
+          "defectos_f1": 0.5714285714285715,
+          "tipo_exactitud": 1.0,
+          "estimacion_mae": 2.0,
+          "estimacion_a_un_paso": 1.0,
+          "tokens": 42551.8,
+          "costo_usd": 0.0030199999999999997,
+          "duracion_s": 22.45,
+          "pasos": 5.4
+        }
+      },
+      "agregado": {
+        "exactitud": {
+          "media": 0.8,
+          "de": 0.0,
+          "n": 1
+        },
+        "falsos_aceptar": {
+          "media": 0.0,
+          "de": 0.0,
+          "n": 1
+        },
+        "defectos_precision": {
+          "media": 0.5,
+          "de": 0.0,
+          "n": 1
+        },
+        "defectos_exhaustividad": {
+          "media": 0.6666666666666666,
+          "de": 0.0,
+          "n": 1
+        },
+        "defectos_f1": {
+          "media": 0.5714285714285715,
+          "de": 0.0,
+          "n": 1
+        },
+        "tipo_exactitud": {
+          "media": 1.0,
+          "de": 0.0,
+          "n": 1
+        },
+        "estimacion_mae": {
+          "media": 2.0,
+          "de": 0.0,
+          "n": 1
+        },
+        "estimacion_a_un_paso": {
+          "media": 1.0,
+          "de": 0.0,
+          "n": 1
+        },
+        "tokens": {
+          "media": 42551.8,
+          "de": 0.0,
+          "n": 1
+        },
+        "costo_usd": {
+          "media": 0.0030199999999999997,
+          "de": 0.0,
+          "n": 1
+        },
+        "duracion_s": {
+          "media": 22.45,
+          "de": 0.0,
+          "n": 1
+        },
+        "pasos": {
+          "media": 5.4,
+          "de": 0.0,
+          "n": 1
+        },
+        "sin_decision": {
+          "media": 0.0,
+          "de": 0.0,
+          "n": 1
+        }
+      },
+      "confusion": {
+        "aceptar->aceptar": 1,
+        "aceptar->devolver": 1,
+        "devolver->devolver": 3
+      }
+    }
+  },
+  "umbral": {
+    "diferencia_exactitud": 0.0,
+    "aumento_tokens": 0.8377412941403182,
+    "condiciones": {
+      "exactitud_+10_puntos": false,
+      "tokens_+30%_o_menos": false,
+      "falsos_aceptar_no_aumentan": true
+    },
+    "cumple": false
+  },
+  "siempre_devolver": 0.6,
+  "ataques": null
+}

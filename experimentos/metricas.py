@@ -272,14 +272,15 @@ def informe(conjunto: str, resultado: dict, trazas: list[dict], etiquetas: dict 
           f"- Modelo pedido: {', '.join(modelos)}. Commits: {', '.join(c[:7] for c in commits)}.",
           f"- Versiones distintas de la Skill: {len({t['hash_skill'] for t in trazas})}; del catálogo: "
           f"{len({t['hash_catalogo'] for t in trazas})}; de los datos: {len({t['hash_datos'] for t in trazas})}.",
-          f"- Trazas con cambios sin commit en el repositorio: {sucias} (las propias trazas nuevas cuentan como cambio)."]
+          f"- Trazas con cambios sin commit en el repositorio: {sucias} (las del piloto cuentan su propia traza; ver D-037)."]
     if etiquetas is not None:
         l.append(f"- Casos evaluados: {len(etiquetas)}.")
         l += [f"- Referencia trivial \"siempre devolver\": exactitud {siempre_devolver(etiquetas):.1%}.", ""]
         cfgs = list(resultado)
         l += ["| Métrica | " + " | ".join(cfgs) + " |", "|---|" + "---|" * len(cfgs)]
         for clave, nombre, pct in ETIQUETAS_MD:
-            l.append(f"| {nombre} | " + " | ".join(_md(resultado[c]["agregado"][clave], pct) for c in cfgs) + " |")
+            dec = 4 if clave == "costo_usd" else 2
+            l.append(f"| {nombre} | " + " | ".join(_md(resultado[c]["agregado"][clave], pct, dec) for c in cfgs) + " |")
         l += ["", "## Exactitud por repetición", "", "| Config | " + " | ".join(
             f"r{r}" for r in sorted({r for c in cfgs for r in resultado[c]['repeticiones']})) + " |", "|---|" +
             "---|" * len({r for c in cfgs for r in resultado[c]['repeticiones']})]

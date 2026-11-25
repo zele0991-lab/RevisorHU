@@ -207,3 +207,27 @@ def test_informe_completo_desde_trazas(tmp_path):
     assert res["base"]["agregado"]["exactitud"]["media"] == 0.0
     texto = metricas.informe("generico", res, trazas, etiquetas, None, metricas.umbral(res))
     assert "Exactitud de la decisión" in texto and "¿Cumple el umbral?" in texto
+
+
+# ===================================================================== ajustes tras el piloto
+def test_las_trazas_no_cuentan_como_cambios_en_la_traza(monkeypatch):
+    from revisor.agente import traza
+
+    salidas = iter(["abc\n", "?? trazas/experimento/generico/x.jsonl\n"])
+    monkeypatch.setattr(traza.subprocess, "run", lambda *a, **k: type("R", (), {"stdout": next(salidas)})())
+    assert traza.estado_git(".")["cambios_sin_confirmar"] is False
+    salidas = iter(["abc\n", "?? trazas/experimento/generico/x.jsonl\n M skills/revisor-hu/SKILL.md\n"])
+    assert traza.estado_git(".")["cambios_sin_confirmar"] is True
+
+
+def test_el_modelo_real_cierra_su_cliente():
+    from revisor.agente.modelo import ModeloClaude
+
+    class Cliente:
+        cerrado = False
+
+        async def close(self):
+            Cliente.cerrado = True
+
+    asyncio.run(ModeloClaude("claude-haiku-5-5", "medium", 1000, None, cliente=Cliente()).cerrar())
+    assert Cliente.cerrado

@@ -69,13 +69,19 @@ def sha256_texto(texto: str) -> str:
 
 
 def estado_git(raiz: Path | str = ".") -> dict:
-    """Commit actual y si hay cambios sin confirmar: una ejecución con cambios no es reproducible."""
+    """
+    Commit actual y si hay cambios sin confirmar: una ejecución con cambios no es reproducible.
+
+    No cuenta lo que está bajo `trazas/`: son salidas, no entradas. Si contaran, la propia traza
+    recién creada haría que toda ejecución pareciera hecha con cambios (D-037).
+    """
     try:
         commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=raiz, capture_output=True,
                                 text=True, timeout=10).stdout.strip() or None
         cambios = subprocess.run(["git", "status", "--porcelain"], cwd=raiz, capture_output=True,
-                                 text=True, timeout=10).stdout.strip()
-        return {"commit": commit, "cambios_sin_confirmar": bool(cambios)}
+                                 text=True, timeout=10).stdout
+        entradas = [l for l in cambios.splitlines() if l.strip() and not l[3:].strip('"').startswith("trazas/")]
+        return {"commit": commit, "cambios_sin_confirmar": bool(entradas)}
     except (OSError, subprocess.SubprocessError):
         return {"commit": None, "cambios_sin_confirmar": None}
 
