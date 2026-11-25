@@ -64,7 +64,8 @@ def test_historias_referencia_rechaza_entradas_invalidas(srv, args, mensaje):
 def test_escala_y_regla_de_division(srv):
     d = llamar(srv, "escala_estimacion", {}).json
     assert d["escala"] == [1, 2, 3, 5, 8, 13] and d["umbral_division"] == 8
-    assert "más de 8 puntos se divide" in d["regla_division"].lower()
+    regla = d["regla_division"].lower()
+    assert "más de 8 puntos" in regla and "único problema" in regla and "'devolver'" in regla
 
 
 def test_escala_no_acepta_argumentos(srv):

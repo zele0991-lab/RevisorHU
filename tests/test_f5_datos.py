@@ -226,6 +226,37 @@ def test_etiquetar_rechaza_aceptar_con_defectos_y_vuelve_a_preguntar(tmp_path):
     assert (fila["decision"], fila["defectos"], fila["estimacion"]) == ("dividir", "QUS-002", "13")
 
 
+def test_traducciones_cubren_casos_y_contexto_y_conservan_criterios():
+    traducciones = etiquetar.leer_traducciones()
+    casos, contexto = _jsonl(CASOS), _jsonl(CONTEXTO)
+    assert {c["id"] for c in casos} | {h["id"] for h in contexto} == set(traducciones)
+    for c in casos:   # si el original tiene criterios, la traducción también; si no, tampoco
+        assert bool(c["criterios_aceptacion"]) == bool(traducciones[c["id"]].get("criterios")), c["id"]
+        assert c["criterios_aceptacion"].count("\n") == traducciones[c["id"]].get("criterios", "").count("\n")
+
+
+def test_etiquetar_muestra_original_y_traduccion(tmp_path):
+    salida: list[str] = []
+    etiquetar.etiquetar("A", piloto=True, entrada=lambda _: "salir", salida=salida.append,
+                        casos_ruta=CASOS, contexto_ruta=CONTEXTO, carpeta=tmp_path)
+    primero = {c["id"]: c for c in _jsonl(CASOS)}[etiquetar.orden_para("A", [c["id"] for c in _jsonl(CASOS)])[0]]
+    texto = "\n".join(salida)
+    assert primero["texto"][:40] in texto.replace("\n", " ")
+    assert "Traducción de apoyo" in texto
+    assert texto.index(primero["texto"][:20]) < texto.index("Traducción de apoyo")   # el original va primero
+
+
+def test_texto_en_la_estimacion_solo_repite_la_estimacion(tmp_path):
+    respuestas = iter(["d", "INV-005", "es vaga", "4", "", "es vaga", "salir"])
+    salida: list[str] = []
+    etiquetar.etiquetar("A", piloto=True, entrada=lambda _: next(respuestas), salida=salida.append,
+                        casos_ruta=CASOS, contexto_ruta=CONTEXTO, carpeta=tmp_path)
+    fila = next(csv.DictReader((tmp_path / "anotador_A.csv").open(encoding="utf-8")))
+    assert (fila["decision"], fila["defectos"], fila["estimacion"], fila["comentario"]) == \
+        ("devolver", "INV-005", "", "es vaga")
+    assert sum("Comentario" in s and "⚠" in s for s in salida) == 2
+
+
 def test_anotador_invalido():
     with pytest.raises(etiquetar.EtiquetaInvalida):
         etiquetar.ruta_anotador("../B")

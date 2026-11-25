@@ -4,6 +4,29 @@ Esta guía es para la persona que etiqueta el conjunto de evaluación. Las etiqu
 **respuesta correcta** con la que se mide al agente, así que se ponen con el mismo criterio con
 que un líder técnico revisaría la historia.
 
+## Rutina rápida (2–3 minutos por historia)
+
+Lee la HU una vez **en el original** y responde estas 6 preguntas en orden. Cada "no" es un defecto:
+
+| # | Pregunta | Si es "no", marca |
+|---|---|---|
+| 1 | ¿Tiene criterios de aceptación comprobables? | INV-005 |
+| 2 | ¿Tiene rol, acción y un "para…" que sea un beneficio real (no repite la acción)? | QUS-001 / QUS-004 / INV-002 |
+| 3 | ¿Es un solo objetivo y cabe en 8 puntos o menos? | QUS-002 / INV-004 → candidata a **dividir** |
+| 4 | ¿Se entiende sin palabras vagas ni soluciones técnicas impuestas? | QUS-006 / QUS-005 / QUS-003 |
+| 5 | Con `b`: ¿no hay otra HU igual o que la contradiga? | QUS-008 / QUS-007 |
+| 6 | ¿Un equipo podría estimarla sin preguntar reglas, límites o errores? | INV-003 / DOR-002 |
+
+Decisión: si falla cualquier pregunta distinta de la 3, **devolver**; si solo falla la 3,
+**dividir**; si no falla ninguna, **aceptar**. QUS-009, INV-001, DOR-001 y DOR-003 solo se marcan cuando saltan a
+la vista. Marca **todos** los defectos que veas con claridad, no solo el primero.
+
+**Traducción de apoyo.** Debajo de cada HU en inglés la herramienta muestra una traducción literal al
+español (D-035). Úsala para entender, pero **decide sobre el original**: el agente recibe el texto en
+inglés. La traducción conserva a propósito las palabras vagas (por ejemplo "some" → "algunos (some)")
+y los errores del original; si la traducción y el original parecen decir cosas distintas, manda el
+original y anótalo en el comentario.
+
 ## Antes de empezar
 
 - **No abras** `datos/evaluacion/diseno_casos.yaml` ni las trazas del agente. El diseño muestra
@@ -42,10 +65,11 @@ Se aplican **en este orden**, el mismo que usa el agente:
 1. **Devolver si no se entiende o no puede seguir.** La HU no se entiende, falta información para
    saber el alcance, es un duplicado de otra HU del backlog o la contradice. No se divide lo que no
    se entiende, aunque sea grande.
-2. **Dividir si es clara pero demasiado grande.** Se entiende, pero tiene más de un objetivo que se
-   podría entregar por separado, o estimas más de 8 puntos. Marca también los demás defectos que
-   veas (al menos QUS-002 o INV-004, que son los que justifican dividir).
-3. **Devolver si tiene cualquier defecto**, de cualquier severidad.
+2. **Devolver si tiene cualquier defecto que no sea de tamaño**, de cualquier severidad, aunque
+   además sea grande. Marca todos los defectos, también QUS-002 o INV-004 si los ves.
+3. **Dividir solo si el tamaño es su único problema.** Cumple todo lo demás, pero tiene más de un
+   objetivo que se podría entregar por separado, o estimas más de 8 puntos. Sus defectos son solo
+   QUS-002 o INV-004.
 4. **Aceptar** solo si todos los criterios se cumplen o no aplican. Si aceptas, no hay defectos.
 
 ## Criterios: cuándo NO se cumplen
@@ -73,6 +97,9 @@ Se aplican **en este orden**, el mismo que usa el agente:
 Notas para estos proyectos:
 
 - Una HU **sin criterios de aceptación** incumple INV-005, y eso basta para devolverla.
+- **Criterio del anotador (D-036):** se **divide** solo si la HU cumple todo **excepto el tamaño**
+  (sus únicos defectos son QUS-002 o INV-004). Si además es ambigua, no verificable o tiene cualquier
+  otro defecto, se **devuelve**.
 - **No inventes requisitos**: si para aceptarla tendrías que suponer una regla que la HU no dice,
   no cumple DOR-002 o INV-003.
 - DOR-001 y DOR-003 se marcan solo cuando la dependencia o la necesidad no funcional es evidente.

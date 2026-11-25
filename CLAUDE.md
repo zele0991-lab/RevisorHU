@@ -8,7 +8,7 @@
 ## Producto
 - Agente que revisa historias de usuario (HU): **clasifica** el tipo, **busca** duplicados, conflictos y referencias, **estima** en story points (1, 2, 3, 5, 8, 13), **refina** (redacción y criterios de aceptación en el formato del catálogo: hoy reglas o lista de verificación, D-027) y **recomienda** `aceptar`, `devolver` (con recomendaciones accionables) o `dividir`.
 - **El agente nunca aprueba.** La aprobación para la fábrica la da una persona (segregación de funciones). `aprobar_para_fabrica` está oculta al modelo.
-- **Regla de decisión** (la misma para la Skill y para la guía de etiquetado, D-025), en este orden: devolver si no se entiende, falta información, es duplicado o hay conflicto; dividir si es clara pero tiene más de un objetivo o más de 8 puntos; devolver ante **cualquier** defecto, sin importar la severidad; aceptar solo sin defectos.
+- **Regla de decisión** (la misma para la Skill y para la guía de etiquetado, D-025), en este orden (D-036): devolver si no se entiende, falta información, es duplicado o hay conflicto; devolver ante **cualquier** defecto que no sea de tamaño, sin importar la severidad; dividir solo si el tamaño (más de un objetivo o más de 8 puntos) es su único problema; aceptar solo sin defectos.
 - `SKILL.md` describe cómo trabajar, no qué criterios existen: no contiene ids de criterios ni nombra herramientas ocultas (lo verifica `tests/test_skill.py`).
 - Pregunta de investigación: ¿la Skill (`skills/revisor-hu/SKILL.md`) mejora la exactitud de la decisión frente a un párrafo genérico (`config/instrucciones_base.md`), y a qué costo en tokens? **Solo cambia el prompt de sistema**: el modelo, las herramientas, la política y el `effort` son los mismos.
 

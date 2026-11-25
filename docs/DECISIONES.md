@@ -301,3 +301,23 @@ borran: si una cambia, se agrega una entrada nueva que la reemplaza y se indica 
   - **Las ejecuciones reales en Azure DevOps** (13 HU con Opus 5.5 y la Skill, D-032) se reportan como **demostración en un entorno real**, no como resultado del experimento: es una sola ejecución, con otro modelo y sin etiquetas.
 - **Hallazgo de la demo:** las HU 11 a 13 se crearon en el área raíz del proyecto (`RevisorHU-Pruebas`), así que el conector les asignó el sistema `todos` y el agente no aplicó los criterios de Banca Móvil; además, sus criterios de aceptación se escribieron dentro de la descripción. Para las próximas demos, crear las HU en `RevisorHU-Pruebas\BancaMovil` y usar el campo *Acceptance Criteria*.
 - **Consecuencias:** el artículo tendrá tres niveles de evidencia: el experimento principal (genérico, reproducible), la evaluación bancaria complementaria (sintética, en el dominio real) y la demostración en Azure DevOps. Las HU bancarias las escribió Claude Code: es una amenaza a la validez que se declara.
+
+## D-035 · Traducción de apoyo al español para etiquetar
+- **Fecha:** 2026-11-24
+- **Contexto:** las 40 HU del conjunto principal y las 200 de contexto están en inglés, y el responsable (único anotador, D-033) no domina el inglés. Traducir cada caso a mano con un servicio externo es lento y propenso a errores.
+- **Decisión:**
+  - `datos/evaluacion/traducciones_es.json` trae una **traducción literal** al español de los 40 casos (texto y criterios de aceptación) y de las 200 HU de contexto. La escribió Claude Code.
+  - `datos/etiquetar.py` la muestra **debajo** del original, con el aviso "decide sobre el ORIGINAL", y también en la búsqueda de parecidas (`b`).
+  - La traducción **no corrige** el original: conserva palabras vagas (con el término inglés entre paréntesis), errores, repeticiones y roles extraños, para no ocultar defectos.
+  - El agente sigue recibiendo **solo el texto original** en inglés; la traducción no entra al experimento.
+  - Traducir no es etiquetar: la traducción no dice nada de la decisión ni de los defectos.
+- **Consecuencias:** se declara en Amenazas a la validez que el anotador leyó con ayuda de una traducción hecha por IA, que podría matizar el sentido de algunas HU. Una prueba verifica que la traducción cubre todos los casos y el contexto, y que conserva si hay criterios y cuántos.
+
+## D-036 · Dividir solo si el tamaño es el único problema
+- **Fecha:** 2026-11-25
+- **Contexto:** al terminar las 40 etiquetas, ningún caso quedó como `dividir` (12 aceptar, 28 devolver). La guía tenía una nota ("una HU sin criterios de aceptación… basta para devolverla") que contradecía el orden de D-025, donde dividir iba antes que "devolver ante cualquier defecto". Al planteárselo, el responsable fijó su criterio de experto: una HU grande que además es ambigua o no verificable se devuelve; **solo se divide la que cumple todo excepto el tamaño**.
+- **Decisión:**
+  - Las etiquetas no se modifican: ya reflejan ese criterio. No se había ejecutado el agente sobre el conjunto, así que no hubo resultados que sesgaran la decisión.
+  - Nuevo orden (reemplaza el punto 2 y 3 de D-025): 1) devolver si no se entiende, falta alcance, es duplicado o hay conflicto; 2) devolver ante **cualquier** defecto que no sea de tamaño, aunque además sea grande; 3) dividir solo si el tamaño (más de un objetivo o más de 8 puntos) es su único problema; 4) aceptar solo sin defectos.
+  - Se ajustaron con el mismo texto: `SKILL.md`, `conocimiento/dor_v0.md`, la guía de etiquetado, `CLAUDE.md`, `.kiro/steering/product.md` y las descripciones que el agente ve en las herramientas `escala_estimacion` y `proponer_division`. Estas dos son iguales para la Skill y la línea base, así que la comparación sigue difiriendo solo en el prompt.
+- **Consecuencias:** el conjunto principal no tiene casos de `dividir` (0 %, por debajo del 20 % que buscaba la propuesta): se reporta como hallazgo (las HU reales de Dalpiaz rara vez cumplen todo salvo el tamaño) y como limitación; la exactitud de `dividir` se mide en el conjunto bancario si allí aparecen casos. Cambiar la Skill después de etiquetar se declara en Amenazas a la validez, junto con que el cambio se hizo antes de cualquier ejecución.

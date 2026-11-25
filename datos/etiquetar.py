@@ -11,6 +11,8 @@ Para cada HU muestra el texto y los criterios de aceptación, y pide:
     - el tipo de HU (del catálogo) y una estimación en la escala Fibonacci (opcional);
     - un comentario libre (opcional).
 Con la tecla `b` busca HU parecidas en el backlog de contexto (para ver duplicados y conflictos).
+Si existe datos/evaluacion/traducciones_es.json, muestra debajo del original una traducción literal de
+apoyo (D-035); la etiqueta se decide sobre el original, que es el texto que recibe el agente.
 
 Reglas que la herramienta hace cumplir:
     - escribe solo en datos/etiquetas/anotador_<X>.csv y nunca abre el archivo de otro anotador;
@@ -42,6 +44,7 @@ from revisor.conocimiento.catalogo import cargar_catalogo  # noqa: E402
 CASOS = RAIZ / "datos" / "evaluacion" / "casos.jsonl"
 CONTEXTO = RAIZ / "datos" / "evaluacion" / "backlog_contexto.jsonl"
 CASOS_BANCA = RAIZ / "datos" / "evaluacion" / "casos_banca.jsonl"
+TRADUCCIONES = RAIZ / "datos" / "evaluacion" / "traducciones_es.json"
 # conjunto -> (casos, backlog donde buscar parecidas, sufijo del archivo de etiquetas)
 CONJUNTOS = {"generico": (CASOS, CONTEXTO, ""), "banca": (CASOS_BANCA, CASOS_BANCA, "_banca")}
 CARPETA = RAIZ / "datos" / "etiquetas"
@@ -112,7 +115,25 @@ def guardar(ruta: Path, fila: dict) -> None:
 
 
 # ================================================================= interfaz de consola
-def _mostrar_caso(caso: dict, n: int, total: int, salida: Callable[[str], None]) -> None:
+def leer_traducciones(ruta: Path = TRADUCCIONES) -> dict[str, dict]:
+    """Traducciones de apoyo por id; vacío si no hay archivo (el conjunto bancario ya está en español)."""
+    if not ruta.exists():
+        return {}
+    datos = json.loads(ruta.read_text(encoding="utf-8"))
+    return {k: v for k, v in datos.items() if not k.startswith("_")}
+
+
+def _mostrar_traduccion(traduccion: dict, ancho: int, salida: Callable[[str], None]) -> None:
+    salida("\n" + "·" * ancho)
+    salida("Traducción de apoyo (decide sobre el ORIGINAL de arriba):")
+    salida(textwrap.fill(traduccion["texto"], ancho))
+    if traduccion.get("criterios"):
+        salida("Criterios de aceptación:")
+        salida(traduccion["criterios"])
+
+
+def _mostrar_caso(caso: dict, n: int, total: int, salida: Callable[[str], None],
+                  traduccion: dict | None = None) -> None:
     ancho = 92
     salida("\n" + "=" * ancho)
     salida(f"Caso {n} de {total} · {caso['id']} · proyecto {caso['proyecto']} · sistema {caso['sistema']}")
@@ -123,6 +144,8 @@ def _mostrar_caso(caso: dict, n: int, total: int, salida: Callable[[str], None])
         salida(caso["criterios_aceptacion"])
     else:
         salida("\n(Sin criterios de aceptación)")
+    if traduccion:
+        _mostrar_traduccion(traduccion, ancho, salida)
 
 
 def _pedir_defectos(criterios: list, entrada: Callable[[str], str], salida: Callable[[str], None]) -> list[str]:
@@ -135,10 +158,24 @@ def _pedir_defectos(criterios: list, entrada: Callable[[str], str], salida: Call
     return [numerados.get(p.strip(), p.strip().upper()) for p in bruto.split(",") if p.strip()]
 
 
+def _pedir_estimacion(entrada: Callable[[str], str], salida: Callable[[str], None]) -> int | None | str:
+    """Pregunta hasta recibir un valor de la escala o vacío; no obliga a repetir el caso entero."""
+    while True:
+        bruto = entrada(f"Estimación {ESCALA}: solo el número, o Enter para no estimar: ").strip()
+        if not bruto:
+            return None
+        if bruto.lower() == "salir":
+            return "salir"
+        if bruto.isdigit() and int(bruto) in ESCALA:
+            return int(bruto)
+        salida(f"  ⚠ Aquí va solo un número de la escala {ESCALA} o Enter. "
+               "El texto libre va en la siguiente pregunta (Comentario).")
+
+
 def etiquetar(anotador: str, piloto: bool, entrada: Callable[[str], str] = input,
               salida: Callable[[str], None] = print, casos_ruta: Path | None = None,
               contexto_ruta: Path | None = None, carpeta: Path = CARPETA, catalogo_ruta: Path = CATALOGO,
-              conjunto: str = "generico") -> int:
+              conjunto: str = "generico", traducciones_ruta: Path = TRADUCCIONES) -> int:
     if conjunto not in CONJUNTOS:
         raise EtiquetaInvalida(f"Conjunto desconocido: {conjunto}. Opciones: {', '.join(CONJUNTOS)}")
     por_defecto_casos, por_defecto_contexto, sufijo = CONJUNTOS[conjunto]
@@ -148,6 +185,7 @@ def etiquetar(anotador: str, piloto: bool, entrada: Callable[[str], str] = input
     contexto = leer_jsonl(contexto_ruta) if contexto_ruta.exists() else []
     indice = IndiceSimilitud({h["id"]: h["texto"] for h in contexto}) if contexto else None
     textos_contexto = {h["id"]: h["texto"] for h in contexto}
+    traducciones = leer_traducciones(traducciones_ruta)
     ruta = ruta_anotador(anotador, carpeta, sufijo)
     hechos = ya_etiquetados(ruta)
     orden = orden_para(anotador, list(casos))
@@ -162,7 +200,7 @@ def etiquetar(anotador: str, piloto: bool, entrada: Callable[[str], str] = input
         criterios = catalogo.aplicables(caso["sistema"])
         permitidos = {c.id for c in criterios}
         while True:
-            _mostrar_caso(caso, n, len(orden), salida)
+            _mostrar_caso(caso, n, len(orden), salida, traducciones.get(cid))
             letra = entrada("Decisión [a]ceptar / [d]evolver / di[v]idir · [b]uscar parecidas: ").strip().lower()
             if letra == "salir":
                 salida(f"Guardado en {ruta}. Puedes retomar cuando quieras.")
@@ -174,6 +212,8 @@ def etiquetar(anotador: str, piloto: bool, entrada: Callable[[str], str] = input
                     parecidas = [(h, s) for h, s in indice.buscar(caso["texto"], 6) if h != cid][:5]
                     for hid, s in parecidas:
                         salida(f"  {hid} ({s:.2f}): {textos_contexto[hid][:150]}")
+                        if hid in traducciones:
+                            salida(f"      ES: {traducciones[hid]['texto'][:150]}")
                 continue
             if letra not in DECISIONES:
                 salida("Responde a, d o v.")
@@ -183,9 +223,11 @@ def etiquetar(anotador: str, piloto: bool, entrada: Callable[[str], str] = input
             if "SALIR" in defectos:
                 return 0
             tipo = tipos[0] if len(tipos) == 1 else entrada(f"Tipo ({', '.join(tipos)}): ").strip()
-            bruto = entrada(f"Estimación {ESCALA} (vacío = sin estimar): ").strip()
+            estimacion = _pedir_estimacion(entrada, salida)
+            if estimacion == "salir":
+                salida(f"Guardado en {ruta}. Puedes retomar cuando quieras.")
+                return 0
             try:
-                estimacion = int(bruto) if bruto else None
                 validar(decision, defectos, tipo, estimacion, permitidos, tipos)
             except (ValueError, EtiquetaInvalida) as e:
                 salida(f"  ⚠ {e} Vuelve a etiquetar este caso.")

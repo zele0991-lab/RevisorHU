@@ -118,6 +118,9 @@ def _escribir_csv(ruta: Path, filas: list[dict], columnas: tuple[str, ...] | lis
 
 
 def main(argv: list[str] | None = None) -> int:
+    for flujo in (sys.stdout, sys.stderr):
+        if hasattr(flujo, "reconfigure"):
+            flujo.reconfigure(errors="replace")
     ap = argparse.ArgumentParser(description="Acuerdo entre anotadores y etiquetas finales")
     ap.add_argument("--conjunto", choices=("generico", "banca"), default="generico")
     ap.add_argument("--a", type=Path, default=None)

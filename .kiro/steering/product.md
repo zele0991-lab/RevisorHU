@@ -14,7 +14,7 @@ inclusion: always
 - **Clasifica** el tipo de HU, **busca** duplicados, conflictos y referencias, **estima** en story points (1, 2, 3, 5, 8, 13), **refina** (redacción "Como…, quiero…, para…" y criterios de aceptación en el formato del catálogo: hoy reglas o lista de verificación, D-027) y **recomienda** `aceptar`, `devolver` (con recomendaciones accionables) o `dividir`.
 - **El agente nunca aprueba.** La aprobación para la fábrica la da una persona (segregación de funciones). `aprobar_para_fabrica` está oculta al modelo.
 - En Azure DevOps el agente solo comenta, etiqueta (`ia-revisada` y una de `ia-aceptar`, `ia-devolver`, `ia-dividir`) y sugiere story points. **Nunca cambia el estado del work item.**
-- **Regla de decisión** (la misma para la Skill y para la guía de etiquetado, D-025), en este orden: devolver si no se entiende, falta información, es duplicado o hay conflicto; dividir si es clara pero tiene más de un objetivo o más de 8 puntos; devolver ante **cualquier** defecto, sin importar la severidad; aceptar solo sin defectos.
+- **Regla de decisión** (la misma para la Skill y para la guía de etiquetado, D-025), en este orden (D-036): devolver si no se entiende, falta información, es duplicado o hay conflicto; devolver ante **cualquier** defecto que no sea de tamaño, sin importar la severidad; dividir solo si el tamaño (más de un objetivo o más de 8 puntos) es su único problema; aceptar solo sin defectos.
 - `SKILL.md` describe cómo trabajar, no qué criterios existen: no contiene ids de criterios ni nombra herramientas ocultas (lo verifica `tests/test_skill.py`).
 
 ## Pregunta de investigación

@@ -30,11 +30,12 @@ Las reglas se aplican en este orden:
 
 1. **Devolver** si la historia está vacía, no se entiende, le falta información para saber su
    alcance, está duplicada o entra en conflicto con otra. No se divide lo que no se entiende.
-2. **Dividir** si es clara pero tiene más de un objetivo o mide más de 8 puntos. Se proponen de 2
-   a 5 partes, todas con el mismo rol, y se reportan los demás defectos.
-3. **Devolver** si incumple **cualquier** criterio que aplique a su sistema, sea cual sea su
-   severidad. Cada recomendación dice qué corregir y apunta a un criterio concreto. Si falta
-   información, se devuelve con **preguntas**; no se inventan requisitos.
+2. **Devolver** si incumple **cualquier** criterio que aplique a su sistema, aparte del tamaño, sea
+   cual sea su severidad, aunque además sea grande. Cada recomendación dice qué corregir y apunta a
+   un criterio concreto. Si falta información, se devuelve con **preguntas**; no se inventan
+   requisitos.
+3. **Dividir** solo si el tamaño es su único problema: cumple todo lo demás, pero tiene más de un
+   objetivo o mide más de 8 puntos. Se proponen de 2 a 5 partes, todas con el mismo rol.
 4. **Aceptar** solo si cumple todos los criterios que aplican. Se entrega refinada y con sus
    criterios de aceptación en el formato que fija el catálogo.
 

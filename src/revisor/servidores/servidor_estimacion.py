@@ -147,8 +147,9 @@ def crear_servidor(referencias: list[Referencia]) -> MCPServer:
             "escala": list(dominio.ESCALA_FIBONACCI),
             "umbral_division": UMBRAL_DIVISION,
             "regla_division": (
-                f"Una HU de más de {UMBRAL_DIVISION} puntos se divide: la decisión es 'dividir' y se proponen "
-                f"las partes con proponer_division. También se divide si tiene más de un objetivo."
+                f"Una HU de más de {UMBRAL_DIVISION} puntos, o con más de un objetivo, es demasiado grande. "
+                f"Se divide (decisión 'dividir', con las partes en proponer_division) solo si el tamaño es su "
+                f"único problema; si además tiene otros defectos, la decisión es 'devolver'."
             ),
         })
 

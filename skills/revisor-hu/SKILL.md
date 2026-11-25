@@ -51,11 +51,12 @@ como vienen.
 1. **Devolver si no se entiende o no puede seguir.** La HU está vacía, no se entiende qué se
    pide, falta información para saber el alcance, es un duplicado o entra en conflicto con otra.
    Esto va primero: no se divide lo que no se entiende, aunque parezca grande.
-2. **Dividir si es clara pero demasiado grande.** Se entiende, pero tiene más de un objetivo que
-   podría entregarse por separado, o tu estimación pasa de 8 puntos. Reporta también los demás
-   defectos que encuentres y propón de 2 a 5 partes.
-3. **Devolver si tiene cualquier defecto.** Basta un criterio en "no cumple", de cualquier
-   severidad.
+2. **Devolver si tiene cualquier defecto que no sea de tamaño.** Basta un criterio en "no
+   cumple", de cualquier severidad (por ejemplo, sin criterios de aceptación o con términos
+   vagos), aunque además sea grande. Reporta todos los defectos, también los de tamaño.
+3. **Dividir solo si el tamaño es su único problema.** Cumple todo lo demás, pero tiene
+   más de un objetivo que podría entregarse por separado, o tu estimación pasa de 8 puntos. Reporta los
+   defectos de tamaño y propón de 2 a 5 partes.
 4. **Aceptar** solo si todos los criterios que aplican se cumplen o no aplican.
 
 ## Reglas

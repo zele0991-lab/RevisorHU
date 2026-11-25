@@ -99,3 +99,10 @@ def test_las_dos_configuraciones_solo_difieren_en_el_prompt():
 def test_la_skill_no_fija_el_formato_de_los_criterios(skill):
     """D-027: el formato es un dato del catálogo; si la Skill lo nombrara, cambiarlo exigiría editarla."""
     assert "Gherkin" not in skill and "lista de verificación" not in skill
+
+
+def test_dividir_solo_si_el_tamano_es_el_unico_problema(skill):
+    """D-036: una HU grande con otros defectos se devuelve; dividir va después de devolver."""
+    devolver = skill.index("Devolver si tiene cualquier defecto que no sea de tamaño")
+    dividir = skill.index("Dividir solo si el tamaño es su único problema")
+    assert devolver < dividir

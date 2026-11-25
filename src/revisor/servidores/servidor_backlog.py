@@ -244,7 +244,8 @@ def crear_servidor(backlog: PuertoBacklog, reglas: FuenteReglas) -> MCPServer:
         structured_output=False,
         description=(
             "Propone dividir la HU en partes más pequeñas, como BORRADOR (no crea HU nuevas). Úsala solo "
-            "cuando la decisión es 'dividir': la HU tiene más de un objetivo o más de 8 puntos. Entre 2 y 5 "
+            "cuando la decisión es 'dividir': la HU tiene más de un objetivo o más de 8 puntos y no tiene otros "
+            "defectos. Entre 2 y 5 "
             "partes, cada una en formato 'Como…, quiero…, para…', todas con el mismo rol y sin datos personales. "
             "Una sola vez por HU."
         ),
