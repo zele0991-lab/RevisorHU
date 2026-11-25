@@ -222,12 +222,13 @@ def test_cli_real_sin_clave_no_arranca(cli, monkeypatch, capsys):
     assert "ANTHROPIC_API_KEY" in capsys.readouterr().err
 
 
-def test_cli_real_avisa_costo_antes_y_respeta_max_hu(cli, monkeypatch, capsys):
+def test_cli_real_avisa_modo_sin_mostrar_costo_y_respeta_max_hu(cli, monkeypatch, capsys):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "clave-falsa-de-prueba")
     correr, recibidas = cli
     assert correr("--real", "--max-hu", "1") == 0
     salida = capsys.readouterr().out
-    assert "MODO REAL" in salida and "0,15–0,25" in salida and "hasta 1 HU" in salida
+    assert "MODO REAL" in salida and "hasta 1 HU" in salida
+    assert "costo" not in salida.lower() and "US$" not in salida
     assert salida.index("MODO REAL") < salida.index("Work item 10")
     assert [op.caso for op in recibidas] == ["10"] and not recibidas[0].simulado
     assert "clave-falsa-de-prueba" not in salida

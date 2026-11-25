@@ -29,11 +29,10 @@ import time
 from pathlib import Path
 from typing import Callable
 
-from revisor.agente.bucle import CONFIGURACIONES, Opciones, Resultado, costo_estimado, ejecutar
+from revisor.agente.bucle import CONFIGURACIONES, Opciones, Resultado, ejecutar
 from revisor.backlog.puerto import ErrorBacklog, Historia, PuertoBacklog
 
 RAZON_DESATENDIDA = "aprobada por la lista desatendida (config/azure_devops.json)"
-COSTO_POR_HU = "US$0,15–0,25"
 
 
 class AprobadorDesatendido:
@@ -207,8 +206,9 @@ def main(argv: list[str] | None = None, dormir: Callable[[float], None] = time.s
         if not os.environ.get("ANTHROPIC_API_KEY", "").strip():
             print("poller_azure: --real necesita ANTHROPIC_API_KEY en el entorno o en .env.", file=sys.stderr)
             return 2
-        print(f"MODO REAL: hasta {max_hu} HU por ciclo con {config['modelo']}; "
-              f"costo estimado {COSTO_POR_HU} por HU.")
+        # El costo no se muestra en pantalla (pedido del responsable para la demo); queda en
+        # cada traza como `costo_usd_estimado` y en docs/DECISIONES.md (D-032).
+        print(f"MODO REAL: hasta {max_hu} HU por ciclo con {config['modelo']}.")
     else:
         print("MODO SIMULADO: el guion reemplaza al modelo (sin costo). "
               "Lee y escribe de verdad en Azure DevOps.")
@@ -217,9 +217,7 @@ def main(argv: list[str] | None = None, dormir: Callable[[float], None] = time.s
         r = asyncio.run(ejecutar(Opciones(caso=h.id, config=args.config, simulado=not args.real,
                                           archivo_config=args.archivo_config,
                                           aprobador=AprobadorDesatendido(escrituras, caso=h.id))))
-        costo = "" if not args.real else \
-            f" · costo estimado US${costo_estimado(r.tokens, config['precios_usd_por_millon']):.2f}"
-        print(f"   resultado: {r.decision or 'sin revisión'} · {r.motivo_cierre}{costo} · traza {r.ruta_traza}")
+        print(f"   resultado: {r.decision or 'sin revisión'} · {r.motivo_cierre} · traza {r.ruta_traza}")
         return r
 
     try:
