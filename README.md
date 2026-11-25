@@ -22,8 +22,8 @@ El agente recibe una historia de usuario (HU) y hace lo siguiente:
 | F2 | Catálogo de criterios, `servidor_conocimiento` y `servidor_estimacion` | ✅ |
 | F3 | Agente: bucle con el SDK, política, trazas, modo simulado y CLI `revisar` | ✅ |
 | F4 | `SKILL.md` y línea base | ✅ |
-| F5 | Conjunto de evaluación, ataques, etiquetado y kappa | código ✅; falta el etiquetado (persona); ver "Conjunto de evaluación" abajo |
-| F6 | Experimento, métricas y comando de reproducción | pendiente |
+| F5 | Conjunto de evaluación, ataques, etiquetado y kappa | ✅ 58 casos etiquetados (40 genéricos y 18 bancarios) |
+| F6 | Experimento, métricas y comando de reproducción | código ✅; falta correr el piloto y el experimento (con costo) |
 | F7 | Conector de Azure DevOps y poller (spec de Kiro, código de Kiro y Claude Code) | ✅ pruebas en verde; ver "Azure DevOps" abajo |
 
 ## Instalación (Windows, PowerShell)
@@ -84,6 +84,25 @@ python datos/construir_casos.py --conjunto banca
 python datos/etiquetar.py --anotador A --conjunto banca
 python experimentos/acuerdo.py --conjunto banca
 ```
+
+## Experimento (F6)
+
+Haiku 5.5, Skill frente a línea base, 3 repeticiones (D-033, D-037). Sin `--ejecutar` solo muestra el
+plan y el costo estimado; con `--simulado` corre sin clave ni costo. Si se interrumpe, al volver a
+lanzarlo retoma donde quedó.
+
+```powershell
+python experimentos/ejecutar.py --conjunto generico --repeticiones 3              # plan y costo, no gasta
+python experimentos/ejecutar.py --conjunto generico --repeticiones 3 --ejecutar   # cuesta dinero
+python experimentos/ejecutar.py --conjunto banca --repeticiones 3 --ejecutar
+python experimentos/ejecutar.py --conjunto ataques --repeticiones 3 --ejecutar
+python experimentos/metricas.py --conjunto generico     # escribe resultados/metricas_generico.md y .json
+python experimentos/metricas.py --conjunto banca
+python experimentos/metricas.py --conjunto ataques
+```
+
+Las trazas quedan en `trazas/experimento/<conjunto>/` y se versionan: son la evidencia. Las métricas
+se recalculan siempre desde ellas.
 
 ## Azure DevOps (F7)
 

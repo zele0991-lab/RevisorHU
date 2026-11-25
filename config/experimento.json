@@ -1,0 +1,70 @@
+{
+  "_lectura": "Configuración del experimento (F6, D-033, D-037). Igual que config.json salvo el modelo (Haiku 5.5), sin fallbacks, los precios y las carpetas. Las dos configuraciones (skill y base) comparten TODO excepto el archivo de 'prompts'. Cada conjunto solo cambia las historias y la carpeta de trazas; experimentos/ejecutar.py los aplica y la traza los registra en 'ajustes'.",
+  "modelo": "claude-haiku-5-5",
+  "effort": "medium",
+  "_fallbacks": "Haiku 5.5 no admite fallbacks del servidor (una lista devuelve 400). Si respondiera otro modelo, la traza queda 'contaminada' y ejecutar.py la repite.",
+  "fallbacks": null,
+  "max_tokens_por_respuesta": 16000,
+  "limites": {
+    "max_pasos": 15,
+    "presupuesto_tokens": 250000
+  },
+  "backend": "local",
+  "politica": "config/politica.json",
+  "prompts": {
+    "skill": "skills/revisor-hu/SKILL.md",
+    "base": "config/instrucciones_base.md"
+  },
+  "tarea": "Revisa la historia de usuario con id '{caso}' del backlog.",
+  "envolver_resultados": true,
+  "catalogo": "conocimiento/criterios.yaml",
+  "guias": "conocimiento",
+  "historias": ["datos/evaluacion/casos.jsonl", "datos/evaluacion/backlog_contexto.jsonl"],
+  "referencias": "datos/referencias/referencias_tawos.jsonl",
+  "guion_simulado": "datos/guiones/guion_simulado.json",
+  "carpeta_trazas": "trazas/experimento/generico",
+  "carpeta_estado": "estado/experimento",
+  "conjuntos": {
+    "generico": {
+      "casos": "datos/evaluacion/casos.jsonl",
+      "etiquetas": "datos/etiquetas/etiquetas_finales.csv",
+      "historias": ["datos/evaluacion/casos.jsonl", "datos/evaluacion/backlog_contexto.jsonl"],
+      "carpeta_trazas": "trazas/experimento/generico"
+    },
+    "banca": {
+      "casos": "datos/evaluacion/casos_banca.jsonl",
+      "etiquetas": "datos/etiquetas/etiquetas_finales_banca.csv",
+      "historias": ["datos/evaluacion/casos_banca.jsonl"],
+      "carpeta_trazas": "trazas/experimento/banca"
+    },
+    "ataques": {
+      "casos": "datos/ataques/ataques.jsonl",
+      "etiquetas": null,
+      "historias": ["datos/ataques/ataques.jsonl", "datos/ataques/backlog_ataques.jsonl"],
+      "carpeta_trazas": "trazas/experimento/ataques"
+    }
+  },
+  "_precios": "USD por millón de tokens de claude-haiku-5-5 con prompts de 100K tokens o menos (skill claude-api, consultada el 2026-11-25): lectura de caché 0,1 veces la entrada y escritura de 5 minutos 1,25 veces. Con prompts de más de 100K la tarifa es 5 veces mayor; aquí cada llamada queda muy por debajo. Solo sirven para estimar; la factura real manda.",
+  "precios_usd_por_millon": {
+    "entrada": 0.10,
+    "salida": 0.50,
+    "cache_lectura": 0.01,
+    "cache_escritura": 0.125
+  },
+  "servidores": [
+    {
+      "nombre": "backlog",
+      "comando": ["python", "-m", "revisor.servidores.servidor_backlog", "--historias", "{historias}",
+                  "--estado", "{estado}", "--marca", "{run_id}", "--catalogo", "{catalogo}"]
+    },
+    {
+      "nombre": "conocimiento",
+      "comando": ["python", "-m", "revisor.servidores.servidor_conocimiento", "--catalogo", "{catalogo}",
+                  "--guias", "{guias}"]
+    },
+    {
+      "nombre": "estimacion",
+      "comando": ["python", "-m", "revisor.servidores.servidor_estimacion", "--referencias", "{referencias}"]
+    }
+  ]
+}

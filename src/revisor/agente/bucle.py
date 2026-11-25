@@ -74,6 +74,9 @@ class Opciones:
     guion: Path | None = None
     modelo: str | None = None
     carpeta_trazas: Path | None = None
+    # Claves de la configuración que se reemplazan en esta ejecución (por ejemplo, las historias de
+    # un conjunto del experimento). Quedan escritas en la traza para saber con qué se corrió.
+    ajustes: dict | None = None
     aprobador: Aprobador = aprobador_terminal
     salida: Callable[[str], None] = print
 
@@ -117,6 +120,8 @@ async def ejecutar(op: Opciones) -> Resultado:
     if op.config not in CONFIGURACIONES:
         raise ErrorConfiguracion(f"--config debe ser {' o '.join(CONFIGURACIONES)}")
     cfg = json.loads(_ruta(raiz, str(op.archivo_config)).read_text(encoding="utf-8"))
+    if op.ajustes:
+        cfg.update(op.ajustes)
 
     ruta_prompt = _ruta(raiz, cfg["prompts"][op.config])
     if not ruta_prompt.exists():
@@ -168,6 +173,7 @@ async def ejecutar(op: Opciones) -> Resultado:
                     hash_politica=sha256_archivos(_ruta(raiz, cfg["politica"])),
                     git=estado_git(raiz), herramientas=sorted(nombres_visibles), ocultas=ocultas,
                     limites=limites, envolver_resultados=cfg["envolver_resultados"],
+                    archivo_config=str(op.archivo_config), ajustes=op.ajustes,
                 )
                 di(f"\n== {run_id}\n   modelo {modelo_pedido} · {len(visibles)} herramientas visibles"
                    + (f" · ocultas: {', '.join(ocultas)}" if ocultas else ""))
