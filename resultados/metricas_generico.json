@@ -1,203 +1,275 @@
 {
   "conjunto": "generico",
-  "trazas": 10,
+  "trazas": 240,
   "configuraciones": {
     "skill": {
       "repeticiones": [
-        1
+        1,
+        2,
+        3
       ],
       "por_repeticion": {
         "1": {
-          "casos": 5,
-          "con_traza": 5,
+          "casos": 40,
+          "con_traza": 40,
+          "sin_decision": 0,
+          "exactitud": 0.85,
+          "falsos_aceptar": 0.0,
+          "defectos_precision": 0.5060975609756098,
+          "defectos_exhaustividad": 0.7155172413793104,
+          "defectos_f1": 0.592857142857143,
+          "tipo_exactitud": 1.0,
+          "estimacion_mae": 1.1666666666666667,
+          "estimacion_a_un_paso": 1.0,
+          "tokens": 81868.275,
+          "costo_usd": 0.0045249999999999995,
+          "duracion_s": 24.78475,
+          "pasos": 5.825
+        },
+        "2": {
+          "casos": 40,
+          "con_traza": 40,
+          "sin_decision": 0,
+          "exactitud": 0.85,
+          "falsos_aceptar": 0.0,
+          "defectos_precision": 0.49382716049382713,
+          "defectos_exhaustividad": 0.6896551724137931,
+          "defectos_f1": 0.5755395683453237,
+          "tipo_exactitud": 1.0,
+          "estimacion_mae": 1.0,
+          "estimacion_a_un_paso": 1.0,
+          "tokens": 81344.5,
+          "costo_usd": 0.0045825,
+          "duracion_s": 24.84975,
+          "pasos": 5.775
+        },
+        "3": {
+          "casos": 40,
+          "con_traza": 40,
           "sin_decision": 0,
           "exactitud": 0.8,
           "falsos_aceptar": 0.0,
-          "defectos_precision": 0.45,
-          "defectos_exhaustividad": 0.75,
-          "defectos_f1": 0.5625000000000001,
+          "defectos_precision": 0.4968944099378882,
+          "defectos_exhaustividad": 0.6896551724137931,
+          "defectos_f1": 0.5776173285198556,
           "tipo_exactitud": 1.0,
-          "estimacion_mae": 2.0,
+          "estimacion_mae": 1.0,
           "estimacion_a_un_paso": 1.0,
-          "tokens": 78199.2,
-          "costo_usd": 0.0046,
-          "duracion_s": 26.678000000000004,
-          "pasos": 5.6
+          "tokens": 82285.35,
+          "costo_usd": 0.00456,
+          "duracion_s": 24.82475,
+          "pasos": 5.85
         }
       },
       "agregado": {
         "exactitud": {
-          "media": 0.8,
-          "de": 0.0,
-          "n": 1
+          "media": 0.8333333333333334,
+          "de": 0.02886751345948125,
+          "n": 3
         },
         "falsos_aceptar": {
           "media": 0.0,
           "de": 0.0,
-          "n": 1
+          "n": 3
         },
         "defectos_precision": {
-          "media": 0.45,
-          "de": 0.0,
-          "n": 1
+          "media": 0.4989397104691084,
+          "de": 0.006385775026814675,
+          "n": 3
         },
         "defectos_exhaustividad": {
-          "media": 0.75,
-          "de": 0.0,
-          "n": 1
+          "media": 0.6982758620689656,
+          "de": 0.014931472479042043,
+          "n": 3
         },
         "defectos_f1": {
-          "media": 0.5625000000000001,
-          "de": 0.0,
-          "n": 1
+          "media": 0.5820046799074408,
+          "de": 0.009455751471549584,
+          "n": 3
         },
         "tipo_exactitud": {
           "media": 1.0,
           "de": 0.0,
-          "n": 1
+          "n": 3
         },
         "estimacion_mae": {
-          "media": 2.0,
-          "de": 0.0,
-          "n": 1
+          "media": 1.0555555555555556,
+          "de": 0.09622504486493767,
+          "n": 3
         },
         "estimacion_a_un_paso": {
           "media": 1.0,
           "de": 0.0,
-          "n": 1
+          "n": 3
         },
         "tokens": {
-          "media": 78199.2,
-          "de": 0.0,
-          "n": 1
+          "media": 81832.70833333333,
+          "de": 471.4323084583149,
+          "n": 3
         },
         "costo_usd": {
-          "media": 0.0046,
-          "de": 0.0,
-          "n": 1
+          "media": 0.004555833333333333,
+          "de": 2.8975564417856324e-05,
+          "n": 3
         },
         "duracion_s": {
-          "media": 26.678000000000004,
-          "de": 0.0,
-          "n": 1
+          "media": 24.81975,
+          "de": 0.032787192621510794,
+          "n": 3
         },
         "pasos": {
-          "media": 5.6,
-          "de": 0.0,
-          "n": 1
+          "media": 5.816666666666666,
+          "de": 0.03818813079129834,
+          "n": 3
         },
         "sin_decision": {
           "media": 0.0,
           "de": 0.0,
-          "n": 1
+          "n": 3
         }
       },
       "confusion": {
-        "aceptar->aceptar": 1,
-        "aceptar->devolver": 1,
-        "devolver->devolver": 3
+        "aceptar->aceptar": 16,
+        "aceptar->devolver": 20,
+        "devolver->devolver": 84
       }
     },
     "base": {
       "repeticiones": [
-        1
+        1,
+        2,
+        3
       ],
       "por_repeticion": {
         "1": {
-          "casos": 5,
-          "con_traza": 5,
+          "casos": 40,
+          "con_traza": 40,
           "sin_decision": 0,
-          "exactitud": 0.8,
+          "exactitud": 0.775,
           "falsos_aceptar": 0.0,
-          "defectos_precision": 0.5,
-          "defectos_exhaustividad": 0.6666666666666666,
-          "defectos_f1": 0.5714285714285715,
+          "defectos_precision": 0.47619047619047616,
+          "defectos_exhaustividad": 0.603448275862069,
+          "defectos_f1": 0.5323193916349809,
           "tipo_exactitud": 1.0,
-          "estimacion_mae": 2.0,
+          "estimacion_mae": 0.9166666666666666,
           "estimacion_a_un_paso": 1.0,
-          "tokens": 42551.8,
-          "costo_usd": 0.0030199999999999997,
-          "duracion_s": 22.45,
+          "tokens": 42214.025,
+          "costo_usd": 0.0029974999999999997,
+          "duracion_s": 22.24125,
+          "pasos": 5.3
+        },
+        "2": {
+          "casos": 40,
+          "con_traza": 40,
+          "sin_decision": 0,
+          "exactitud": 0.75,
+          "falsos_aceptar": 0.0,
+          "defectos_precision": 0.4647887323943662,
+          "defectos_exhaustividad": 0.5689655172413793,
+          "defectos_f1": 0.5116279069767443,
+          "tipo_exactitud": 1.0,
+          "estimacion_mae": 1.25,
+          "estimacion_a_un_paso": 0.9166666666666666,
+          "tokens": 41412.7,
+          "costo_usd": 0.0029375,
+          "duracion_s": 21.958750000000002,
+          "pasos": 5.25
+        },
+        "3": {
+          "casos": 40,
+          "con_traza": 40,
+          "sin_decision": 0,
+          "exactitud": 0.725,
+          "falsos_aceptar": 0.0,
+          "defectos_precision": 0.47651006711409394,
+          "defectos_exhaustividad": 0.6120689655172413,
+          "defectos_f1": 0.5358490566037736,
+          "tipo_exactitud": 1.0,
+          "estimacion_mae": 1.4166666666666667,
+          "estimacion_a_un_paso": 0.9166666666666666,
+          "tokens": 43242.825,
+          "costo_usd": 0.0029925,
+          "duracion_s": 22.11275,
           "pasos": 5.4
         }
       },
       "agregado": {
         "exactitud": {
-          "media": 0.8,
-          "de": 0.0,
-          "n": 1
+          "media": 0.75,
+          "de": 0.025000000000000022,
+          "n": 3
         },
         "falsos_aceptar": {
           "media": 0.0,
           "de": 0.0,
-          "n": 1
+          "n": 3
         },
         "defectos_precision": {
-          "media": 0.5,
-          "de": 0.0,
-          "n": 1
+          "media": 0.4724964252329788,
+          "de": 0.00667697021563032,
+          "n": 3
         },
         "defectos_exhaustividad": {
-          "media": 0.6666666666666666,
-          "de": 0.0,
-          "n": 1
+          "media": 0.5948275862068965,
+          "de": 0.02280820095745333,
+          "n": 3
         },
         "defectos_f1": {
-          "media": 0.5714285714285715,
-          "de": 0.0,
-          "n": 1
+          "media": 0.5265987850718329,
+          "de": 0.013084724945579999,
+          "n": 3
         },
         "tipo_exactitud": {
           "media": 1.0,
           "de": 0.0,
-          "n": 1
+          "n": 3
         },
         "estimacion_mae": {
-          "media": 2.0,
-          "de": 0.0,
-          "n": 1
+          "media": 1.1944444444444444,
+          "de": 0.25458753860865785,
+          "n": 3
         },
         "estimacion_a_un_paso": {
-          "media": 1.0,
-          "de": 0.0,
-          "n": 1
+          "media": 0.9444444444444443,
+          "de": 0.048112522432468836,
+          "n": 3
         },
         "tokens": {
-          "media": 42551.8,
-          "de": 0.0,
-          "n": 1
+          "media": 42289.85,
+          "de": 917.4156374702796,
+          "n": 3
         },
         "costo_usd": {
-          "media": 0.0030199999999999997,
-          "de": 0.0,
-          "n": 1
+          "media": 0.0029758333333333334,
+          "de": 3.329164059239686e-05,
+          "n": 3
         },
         "duracion_s": {
-          "media": 22.45,
-          "de": 0.0,
-          "n": 1
+          "media": 22.104249999999997,
+          "de": 0.14144168409630808,
+          "n": 3
         },
         "pasos": {
-          "media": 5.4,
-          "de": 0.0,
-          "n": 1
+          "media": 5.316666666666666,
+          "de": 0.07637626158259754,
+          "n": 3
         },
         "sin_decision": {
           "media": 0.0,
           "de": 0.0,
-          "n": 1
+          "n": 3
         }
       },
       "confusion": {
-        "aceptar->aceptar": 1,
-        "aceptar->devolver": 1,
-        "devolver->devolver": 3
+        "aceptar->aceptar": 6,
+        "aceptar->devolver": 30,
+        "devolver->devolver": 84
       }
     }
   },
   "umbral": {
-    "diferencia_exactitud": 0.0,
-    "aumento_tokens": 0.8377412941403182,
+    "diferencia_exactitud": 0.08333333333333337,
+    "aumento_tokens": 0.935043712222515,
     "condiciones": {
       "exactitud_+10_puntos": false,
       "tokens_+30%_o_menos": false,
@@ -205,6 +277,6 @@
     },
     "cumple": false
   },
-  "siempre_devolver": 0.6,
+  "siempre_devolver": 0.7,
   "ataques": null
 }

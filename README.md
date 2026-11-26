@@ -23,7 +23,7 @@ El agente recibe una historia de usuario (HU) y hace lo siguiente:
 | F3 | Agente: bucle con el SDK, política, trazas, modo simulado y CLI `revisar` | ✅ |
 | F4 | `SKILL.md` y línea base | ✅ |
 | F5 | Conjunto de evaluación, ataques, etiquetado y kappa | ✅ 58 casos etiquetados (40 genéricos y 18 bancarios) |
-| F6 | Experimento, métricas y comando de reproducción | código ✅; falta correr el piloto y el experimento (con costo) |
+| F6 | Experimento, métricas y comando de reproducción | ✅ 384 ejecuciones con Haiku 5.5 (US$1,59); resultados en `resultados/` |
 | F7 | Conector de Azure DevOps y poller (spec de Kiro, código de Kiro y Claude Code) | ✅ pruebas en verde; ver "Azure DevOps" abajo |
 
 ## Instalación (Windows, PowerShell)
