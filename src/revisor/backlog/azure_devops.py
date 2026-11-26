@@ -515,10 +515,20 @@ class BacklogAzureDevOps(PuertoBacklog):
         if limite <= 0:
             return []
         dias = int(self.poller.get("ventana_dias", 7))
+        # Etiqueta de entrada (D-039): con `requerir_etiqueta_para_revision`, el poller solo toma las
+        # HU que el analista marcó como terminadas, para no revisar una HU que aún se está redactando.
+        entrada = ""
+        if self.poller.get("requerir_etiqueta_para_revision"):
+            etiqueta = self.etiquetas.get("para_revision")
+            if not etiqueta:
+                raise ErrorBacklog("requerir_etiqueta_para_revision está activo, pero falta etiquetas.para_revision "
+                                   "en config/azure_devops.json.")
+            entrada = f"AND [System.Tags] CONTAINS {_wiql_literal(etiqueta)} "
         consulta = (
             "SELECT [System.Id] FROM WorkItems WHERE [System.TeamProject] = @project "
             f"AND [System.WorkItemType] = {_wiql_literal(self.tipo_work_item)} "
             f"AND [System.Tags] NOT CONTAINS {_wiql_literal(self.etiquetas['revisada'])} "
+            f"{entrada}"
             f"AND [System.CreatedDate] >= @Today - {dias} "
             "ORDER BY [System.CreatedDate] ASC"
         )

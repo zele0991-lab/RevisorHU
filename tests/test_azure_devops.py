@@ -371,15 +371,15 @@ def _wi(id: int, *, titulo="Título", descripcion="<p>Como cliente, quiero algo,
     return {"id": id, "fields": campos}
 
 
-def _backlog(respuestas, marca="run-123", mapeo=None):
+def _backlog(respuestas, marca="run-123", mapeo=None, poller=None, etiquetas=None):
     cliente = ClienteHTTPFalso(respuestas)
     esperas: list[float] = []
     b = BacklogAzureDevOps(
         org_url="https://dev.azure.com/org-prueba", project="RevisorHU-Pruebas",
         tipo_work_item=CONFIG["tipo_work_item"],
         mapeo_area_sistema=mapeo if mapeo is not None else CONFIG["mapeo_area_sistema"],
-        sistema_por_defecto=CONFIG["sistema_por_defecto"], etiquetas=CONFIG["etiquetas"],
-        poller=CONFIG["poller"], marca=marca, cliente_http=cliente, dormir=esperas.append,
+        sistema_por_defecto=CONFIG["sistema_por_defecto"], etiquetas=etiquetas or CONFIG["etiquetas"],
+        poller=poller or CONFIG["poller"], marca=marca, cliente_http=cliente, dormir=esperas.append,
     )
     return b, cliente, esperas
 
@@ -602,6 +602,32 @@ def test_listar_pendientes_filtra_por_etiqueta_y_ventana():
     assert [h.id for h in res] == ["3", "1"]                # en el orden de la WIQL
     assert all(h.proyecto == "RevisorHU-Pruebas" for h in res)
     assert all("Alice" not in repr(h) and "bob@" not in repr(h) for h in res)
+
+
+def test_listar_pendientes_exige_la_etiqueta_para_revision():
+    """D-039: con la configuración versionada, solo entran las HU que el analista marcó como terminadas."""
+    assert CONFIG["poller"]["requerir_etiqueta_para_revision"] is True
+    b, cliente, _ = _backlog([_ok({"workItems": []})])
+    b.listar_pendientes(3)
+    consulta = cliente.cuerpo_json(0)["query"]
+    assert f"[System.Tags] CONTAINS '{CONFIG['etiquetas']['para_revision']}'" in consulta
+    assert "NOT CONTAINS 'ia-revisada'" in consulta
+
+
+def test_listar_pendientes_sin_exigir_etiqueta_toma_todas():
+    b, cliente, _ = _backlog([_ok({"workItems": []})],
+                             poller={**CONFIG["poller"], "requerir_etiqueta_para_revision": False})
+    b.listar_pendientes(3)
+    consulta = cliente.cuerpo_json(0)["query"]
+    assert " CONTAINS 'para-revision'" not in consulta and "NOT CONTAINS 'ia-revisada'" in consulta
+
+
+def test_listar_pendientes_exigir_etiqueta_sin_definirla_falla_antes_de_llamar():
+    etiquetas = {k: v for k, v in CONFIG["etiquetas"].items() if k != "para_revision"}
+    b, cliente, _ = _backlog([], etiquetas=etiquetas)
+    with pytest.raises(ErrorBacklog, match="para_revision"):
+        b.listar_pendientes(3)
+    assert cliente.llamadas == []
 
 
 @pytest.mark.parametrize("limite", [0, -1])

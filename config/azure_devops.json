@@ -9,6 +9,7 @@
   "sistema_por_defecto": "todos",
   "etiquetas": {
     "revisada": "ia-revisada",
+    "para_revision": "para-revision",
     "por_decision": {
       "aceptar": "ia-aceptar",
       "devolver": "ia-devolver",
@@ -19,6 +20,8 @@
     "intervalo_minutos": 15,
     "max_hu_por_ciclo": 3,
     "ventana_dias": 7,
+    "_requerir_etiqueta_para_revision": "Si es true, el poller solo toma las HU con la etiqueta etiquetas.para_revision, que el analista agrega cuando terminó de redactar (D-039). Así no revisa una HU a medio escribir. Con false toma todas las HU sin ia-revisada.",
+    "requerir_etiqueta_para_revision": true,
     "registro_procesados": "estado/azure_procesados.json"
   },
   "_escrituras_desatendidas": "En el perfil 'azure' de la política, las escrituras requieren confirmación. El poller corre sin una persona delante: solo puede aprobar automáticamente las herramientas de esta lista, y la traza lo registra como 'aprobada por la lista desatendida' (D-029).",

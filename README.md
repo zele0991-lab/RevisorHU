@@ -99,6 +99,7 @@ python experimentos/ejecutar.py --conjunto ataques --repeticiones 3 --ejecutar
 python experimentos/metricas.py --conjunto generico     # escribe resultados/metricas_generico.md y .json
 python experimentos/metricas.py --conjunto banca
 python experimentos/metricas.py --conjunto ataques
+python experimentos/por_criterio.py           # acuerdo por criterio (exploratorio, D-038)
 ```
 
 Las trazas quedan en `trazas/experimento/<conjunto>/` y se versionan: son la evidencia. Las métricas
@@ -106,7 +107,7 @@ se recalculan siempre desde ellas.
 
 ## Azure DevOps (F7)
 
-El poller busca User Stories nuevas (sin la etiqueta `ia-revisada`, creadas en los últimos 7 días) y ejecuta al agente sobre cada una. El agente deja **un comentario** con su recomendación (aceptar, devolver o dividir), los defectos, la historia refinada, los criterios propuestos y los story points sugeridos, y agrega las etiquetas `ia-revisada` e `ia-<decisión>`. **Nunca** aprueba, cambia el estado, asigna personas ni escribe el campo Story Points: la decisión es de una persona.
+El poller busca User Stories listas para revisar —con la etiqueta `para-revision`, sin `ia-revisada` y creadas en los últimos 7 días— y ejecuta al agente sobre cada una. **Agrega `para-revision` solo cuando termines de redactar la HU** (descripción y criterios de aceptación): así el poller no toma una HU a medio escribir. Con `poller.requerir_etiqueta_para_revision: false` en `config/azure_devops.json` vuelve a tomar todas las HU sin `ia-revisada` (D-039). El agente deja **un comentario** con su recomendación (aceptar, devolver o dividir), los defectos, la historia refinada, los criterios propuestos y los story points sugeridos, y agrega las etiquetas `ia-revisada` e `ia-<decisión>`. **Nunca** aprueba, cambia el estado, asigna personas ni escribe el campo Story Points: la decisión es de una persona.
 
 Configuración (la organización de prueba se crea con `docs/GUIA_AZURE_DEVOPS.md`):
 

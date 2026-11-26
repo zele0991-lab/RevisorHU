@@ -1,0 +1,556 @@
+{
+  "por_categoria": {
+    "qus": {
+      "skill": {
+        "anotador": 45.0,
+        "marca": 64.0,
+        "precision": 0.3489583333333333,
+        "exhaustividad": 0.4962962962962963,
+        "f1": 0.40978593272171254
+      },
+      "base": {
+        "anotador": 45.0,
+        "marca": 64.0,
+        "precision": 0.3489583333333333,
+        "exhaustividad": 0.4962962962962963,
+        "f1": 0.40978593272171254
+      }
+    },
+    "invest": {
+      "skill": {
+        "anotador": 88.0,
+        "marca": 96.0,
+        "precision": 0.7222222222222222,
+        "exhaustividad": 0.7878787878787878,
+        "f1": 0.7536231884057971
+      },
+      "base": {
+        "anotador": 88.0,
+        "marca": 78.66666666666667,
+        "precision": 0.7203389830508474,
+        "exhaustividad": 0.6439393939393939,
+        "f1": 0.6799999999999999
+      }
+    },
+    "dor": {
+      "skill": {
+        "anotador": 15.0,
+        "marca": 83.33333333333333,
+        "precision": 0.132,
+        "exhaustividad": 0.7333333333333333,
+        "f1": 0.22372881355932203
+      },
+      "base": {
+        "anotador": 15.0,
+        "marca": 60.666666666666664,
+        "precision": 0.14835164835164835,
+        "exhaustividad": 0.6,
+        "f1": 0.2378854625550661
+      }
+    },
+    "banca_movil": {
+      "skill": {
+        "anotador": 19.0,
+        "marca": 69.33333333333333,
+        "precision": 0.20673076923076922,
+        "exhaustividad": 0.7543859649122807,
+        "f1": 0.32452830188679244
+      },
+      "base": {
+        "anotador": 19.0,
+        "marca": 28.333333333333332,
+        "precision": 0.32941176470588235,
+        "exhaustividad": 0.49122807017543857,
+        "f1": 0.39436619718309857
+      }
+    }
+  },
+  "por_criterio": {
+    "QUS-001": {
+      "nombre": "Bien formada",
+      "categoria": "qus",
+      "skill": {
+        "anotador": 15.0,
+        "marca": 1.0,
+        "precision": 1.0,
+        "exhaustividad": 0.06666666666666667,
+        "f1": 0.125
+      },
+      "base": {
+        "anotador": 15.0,
+        "marca": 1.3333333333333333,
+        "precision": 1.0,
+        "exhaustividad": 0.08888888888888889,
+        "f1": 0.163265306122449
+      }
+    },
+    "QUS-002": {
+      "nombre": "Atómica",
+      "categoria": "qus",
+      "skill": {
+        "anotador": 5.0,
+        "marca": 11.0,
+        "precision": 0.36363636363636365,
+        "exhaustividad": 0.8,
+        "f1": 0.5000000000000001
+      },
+      "base": {
+        "anotador": 5.0,
+        "marca": 12.0,
+        "precision": 0.3333333333333333,
+        "exhaustividad": 0.8,
+        "f1": 0.47058823529411764
+      }
+    },
+    "QUS-003": {
+      "nombre": "Mínima",
+      "categoria": "qus",
+      "skill": {
+        "anotador": 1.0,
+        "marca": 1.0,
+        "precision": 0.0,
+        "exhaustividad": 0.0,
+        "f1": 0.0
+      },
+      "base": {
+        "anotador": 1.0,
+        "marca": 0.0,
+        "precision": null,
+        "exhaustividad": 0.0,
+        "f1": 0.0
+      }
+    },
+    "QUS-004": {
+      "nombre": "Conceptualmente sólida",
+      "categoria": "qus",
+      "skill": {
+        "anotador": 3.0,
+        "marca": 4.666666666666667,
+        "precision": 0.14285714285714285,
+        "exhaustividad": 0.2222222222222222,
+        "f1": 0.17391304347826086
+      },
+      "base": {
+        "anotador": 3.0,
+        "marca": 1.3333333333333333,
+        "precision": 0.0,
+        "exhaustividad": 0.0,
+        "f1": 0.0
+      }
+    },
+    "QUS-005": {
+      "nombre": "Orientada al problema",
+      "categoria": "qus",
+      "skill": {
+        "anotador": 1.0,
+        "marca": 4.0,
+        "precision": 0.0,
+        "exhaustividad": 0.0,
+        "f1": 0.0
+      },
+      "base": {
+        "anotador": 1.0,
+        "marca": 0.0,
+        "precision": null,
+        "exhaustividad": 0.0,
+        "f1": 0.0
+      }
+    },
+    "QUS-006": {
+      "nombre": "No ambigua",
+      "categoria": "qus",
+      "skill": {
+        "anotador": 18.0,
+        "marca": 33.666666666666664,
+        "precision": 0.49504950495049505,
+        "exhaustividad": 0.9259259259259259,
+        "f1": 0.6451612903225805
+      },
+      "base": {
+        "anotador": 18.0,
+        "marca": 44.666666666666664,
+        "precision": 0.3805970149253731,
+        "exhaustividad": 0.9444444444444444,
+        "f1": 0.5425531914893618
+      }
+    },
+    "QUS-007": {
+      "nombre": "Sin conflictos",
+      "categoria": "qus",
+      "skill": {
+        "anotador": 0.0,
+        "marca": 3.3333333333333335,
+        "precision": 0.0,
+        "exhaustividad": null,
+        "f1": 0.0
+      },
+      "base": {
+        "anotador": 0.0,
+        "marca": 0.6666666666666666,
+        "precision": 0.0,
+        "exhaustividad": null,
+        "f1": 0.0
+      }
+    },
+    "QUS-008": {
+      "nombre": "Única",
+      "categoria": "qus",
+      "skill": {
+        "anotador": 2.0,
+        "marca": 5.0,
+        "precision": 0.0,
+        "exhaustividad": 0.0,
+        "f1": 0.0
+      },
+      "base": {
+        "anotador": 2.0,
+        "marca": 4.0,
+        "precision": 0.0,
+        "exhaustividad": 0.0,
+        "f1": 0.0
+      }
+    },
+    "QUS-009": {
+      "nombre": "Uniforme",
+      "categoria": "qus",
+      "skill": {
+        "anotador": 0.0,
+        "marca": 0.3333333333333333,
+        "precision": 0.0,
+        "exhaustividad": null,
+        "f1": 0.0
+      },
+      "base": {
+        "anotador": 0.0,
+        "marca": 0.0,
+        "precision": null,
+        "exhaustividad": null,
+        "f1": null
+      }
+    },
+    "INV-001": {
+      "nombre": "Independiente",
+      "categoria": "invest",
+      "skill": {
+        "anotador": 6.0,
+        "marca": 0.3333333333333333,
+        "precision": 0.0,
+        "exhaustividad": 0.0,
+        "f1": 0.0
+      },
+      "base": {
+        "anotador": 6.0,
+        "marca": 0.3333333333333333,
+        "precision": 0.0,
+        "exhaustividad": 0.0,
+        "f1": 0.0
+      }
+    },
+    "INV-002": {
+      "nombre": "Valiosa",
+      "categoria": "invest",
+      "skill": {
+        "anotador": 1.0,
+        "marca": 11.0,
+        "precision": 0.06060606060606061,
+        "exhaustividad": 0.6666666666666666,
+        "f1": 0.1111111111111111
+      },
+      "base": {
+        "anotador": 1.0,
+        "marca": 10.0,
+        "precision": 0.03333333333333333,
+        "exhaustividad": 0.3333333333333333,
+        "f1": 0.0606060606060606
+      }
+    },
+    "INV-003": {
+      "nombre": "Estimable",
+      "categoria": "invest",
+      "skill": {
+        "anotador": 32.0,
+        "marca": 41.333333333333336,
+        "precision": 0.75,
+        "exhaustividad": 0.96875,
+        "f1": 0.8454545454545455
+      },
+      "base": {
+        "anotador": 32.0,
+        "marca": 23.333333333333332,
+        "precision": 0.7571428571428571,
+        "exhaustividad": 0.5520833333333334,
+        "f1": 0.6385542168674698
+      }
+    },
+    "INV-004": {
+      "nombre": "Pequeña",
+      "categoria": "invest",
+      "skill": {
+        "anotador": 14.0,
+        "marca": 3.0,
+        "precision": 0.8888888888888888,
+        "exhaustividad": 0.19047619047619047,
+        "f1": 0.3137254901960784
+      },
+      "base": {
+        "anotador": 14.0,
+        "marca": 4.666666666666667,
+        "precision": 0.7857142857142857,
+        "exhaustividad": 0.2619047619047619,
+        "f1": 0.39285714285714285
+      }
+    },
+    "INV-005": {
+      "nombre": "Verificable",
+      "categoria": "invest",
+      "skill": {
+        "anotador": 35.0,
+        "marca": 40.333333333333336,
+        "precision": 0.8677685950413223,
+        "exhaustividad": 1.0,
+        "f1": 0.9292035398230089
+      },
+      "base": {
+        "anotador": 35.0,
+        "marca": 40.333333333333336,
+        "precision": 0.8677685950413223,
+        "exhaustividad": 1.0,
+        "f1": 0.9292035398230089
+      }
+    },
+    "DOR-001": {
+      "nombre": "Dependencias identificadas",
+      "categoria": "dor",
+      "skill": {
+        "anotador": 1.0,
+        "marca": 26.0,
+        "precision": 0.0,
+        "exhaustividad": 0.0,
+        "f1": 0.0
+      },
+      "base": {
+        "anotador": 1.0,
+        "marca": 16.666666666666668,
+        "precision": 0.0,
+        "exhaustividad": 0.0,
+        "f1": 0.0
+      }
+    },
+    "DOR-002": {
+      "nombre": "Reglas de negocio explícitas",
+      "categoria": "dor",
+      "skill": {
+        "anotador": 11.0,
+        "marca": 39.0,
+        "precision": 0.23076923076923078,
+        "exhaustividad": 0.8181818181818182,
+        "f1": 0.36000000000000004
+      },
+      "base": {
+        "anotador": 11.0,
+        "marca": 40.333333333333336,
+        "precision": 0.19834710743801653,
+        "exhaustividad": 0.7272727272727273,
+        "f1": 0.31168831168831174
+      }
+    },
+    "DOR-003": {
+      "nombre": "Requisitos no funcionales declarados",
+      "categoria": "dor",
+      "skill": {
+        "anotador": 3.0,
+        "marca": 18.333333333333332,
+        "precision": 0.10909090909090909,
+        "exhaustividad": 0.6666666666666666,
+        "f1": 0.1875
+      },
+      "base": {
+        "anotador": 3.0,
+        "marca": 3.6666666666666665,
+        "precision": 0.2727272727272727,
+        "exhaustividad": 0.3333333333333333,
+        "f1": 0.3
+      }
+    },
+    "BM-001": {
+      "nombre": "Autenticación y MFA",
+      "categoria": "banca_movil",
+      "skill": {
+        "anotador": 6.0,
+        "marca": 8.0,
+        "precision": 0.75,
+        "exhaustividad": 1.0,
+        "f1": 0.8571428571428571
+      },
+      "base": {
+        "anotador": 6.0,
+        "marca": 7.0,
+        "precision": 0.8095238095238095,
+        "exhaustividad": 0.9444444444444444,
+        "f1": 0.8717948717948718
+      }
+    },
+    "BM-002": {
+      "nombre": "Manejo de sesión",
+      "categoria": "banca_movil",
+      "skill": {
+        "anotador": 0.0,
+        "marca": 4.333333333333333,
+        "precision": 0.0,
+        "exhaustividad": null,
+        "f1": 0.0
+      },
+      "base": {
+        "anotador": 0.0,
+        "marca": 1.0,
+        "precision": 0.0,
+        "exhaustividad": null,
+        "f1": 0.0
+      }
+    },
+    "BM-003": {
+      "nombre": "Enmascarado de datos sensibles",
+      "categoria": "banca_movil",
+      "skill": {
+        "anotador": 1.0,
+        "marca": 7.0,
+        "precision": 0.14285714285714285,
+        "exhaustividad": 1.0,
+        "f1": 0.25
+      },
+      "base": {
+        "anotador": 1.0,
+        "marca": 5.0,
+        "precision": 0.0,
+        "exhaustividad": 0.0,
+        "f1": 0.0
+      }
+    },
+    "BM-004": {
+      "nombre": "Seguridad de la app móvil (OWASP MASVS)",
+      "categoria": "banca_movil",
+      "skill": {
+        "anotador": 5.0,
+        "marca": 1.0,
+        "precision": 0.6666666666666666,
+        "exhaustividad": 0.13333333333333333,
+        "f1": 0.2222222222222222
+      },
+      "base": {
+        "anotador": 5.0,
+        "marca": 0.0,
+        "precision": null,
+        "exhaustividad": 0.0,
+        "f1": 0.0
+      }
+    },
+    "BM-005": {
+      "nombre": "Trazabilidad y auditoría",
+      "categoria": "banca_movil",
+      "skill": {
+        "anotador": 1.0,
+        "marca": 6.333333333333333,
+        "precision": 0.15789473684210525,
+        "exhaustividad": 1.0,
+        "f1": 0.2727272727272727
+      },
+      "base": {
+        "anotador": 1.0,
+        "marca": 1.3333333333333333,
+        "precision": 0.5,
+        "exhaustividad": 0.6666666666666666,
+        "f1": 0.5714285714285715
+      }
+    },
+    "BM-006": {
+      "nombre": "Accesibilidad",
+      "categoria": "banca_movil",
+      "skill": {
+        "anotador": 0.0,
+        "marca": 10.0,
+        "precision": 0.0,
+        "exhaustividad": null,
+        "f1": 0.0
+      },
+      "base": {
+        "anotador": 0.0,
+        "marca": 0.3333333333333333,
+        "precision": 0.0,
+        "exhaustividad": null,
+        "f1": 0.0
+      }
+    },
+    "BM-007": {
+      "nombre": "Comportamiento sin conexión y errores",
+      "categoria": "banca_movil",
+      "skill": {
+        "anotador": 3.0,
+        "marca": 10.666666666666666,
+        "precision": 0.28125,
+        "exhaustividad": 1.0,
+        "f1": 0.43902439024390244
+      },
+      "base": {
+        "anotador": 3.0,
+        "marca": 4.0,
+        "precision": 0.5,
+        "exhaustividad": 0.6666666666666666,
+        "f1": 0.5714285714285715
+      }
+    },
+    "BM-008": {
+      "nombre": "Plataformas iOS y Android",
+      "categoria": "banca_movil",
+      "skill": {
+        "anotador": 2.0,
+        "marca": 6.333333333333333,
+        "precision": 0.2631578947368421,
+        "exhaustividad": 0.8333333333333334,
+        "f1": 0.39999999999999997
+      },
+      "base": {
+        "anotador": 2.0,
+        "marca": 1.0,
+        "precision": 0.0,
+        "exhaustividad": 0.0,
+        "f1": 0.0
+      }
+    },
+    "BM-009": {
+      "nombre": "Protección de datos personales (Ley 8968)",
+      "categoria": "banca_movil",
+      "skill": {
+        "anotador": 1.0,
+        "marca": 6.0,
+        "precision": 0.16666666666666666,
+        "exhaustividad": 1.0,
+        "f1": 0.2857142857142857
+      },
+      "base": {
+        "anotador": 1.0,
+        "marca": 4.333333333333333,
+        "precision": 0.23076923076923078,
+        "exhaustividad": 1.0,
+        "f1": 0.375
+      }
+    },
+    "BM-010": {
+      "nombre": "Cumplimiento normativo SUGEF",
+      "categoria": "banca_movil",
+      "skill": {
+        "anotador": 0.0,
+        "marca": 9.666666666666666,
+        "precision": 0.0,
+        "exhaustividad": null,
+        "f1": 0.0
+      },
+      "base": {
+        "anotador": 0.0,
+        "marca": 4.333333333333333,
+        "precision": 0.0,
+        "exhaustividad": null,
+        "f1": 0.0
+      }
+    }
+  }
+}

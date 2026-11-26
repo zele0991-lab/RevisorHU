@@ -231,3 +231,30 @@ def test_el_modelo_real_cierra_su_cliente():
 
     asyncio.run(ModeloClaude("claude-haiku-5-5", "medium", 1000, None, cliente=Cliente()).cerrar())
     assert Cliente.cerrado
+
+
+# ===================================================================== acuerdo por criterio (D-038)
+import por_criterio  # noqa: E402
+
+
+def test_acuerdo_por_criterio_cuenta_coincidencias_de_mas_y_omitidos():
+    catalogo = {"INV-005": {"nombre": "Verificable", "categoria": "invest"},
+                "DOR-001": {"nombre": "Dependencias", "categoria": "dor"}}
+    etiquetas = {"C1": {"defectos": {"INV-005"}}, "C2": {"defectos": {"INV-005", "DOR-001"}}}
+    t = lambda d, valida=True: {"valida": valida, "defectos": set(d)}
+    elegidas = {
+        ("skill", 1, "C1"): t({"INV-005", "DOR-001"}),   # 1 coincide, 1 de más
+        ("skill", 1, "C2"): t({"INV-005"}),              # 1 coincide, 1 omitido
+        ("base", 1, "C1"): t(set(), valida=False),       # no válida: no cuenta
+        ("base", 1, "C2"): t({"INV-005", "DOR-001"}),
+        ("skill", 1, "X9"): t({"INV-005"}),              # sin etiqueta: no cuenta
+    }
+    res = por_criterio.resumen(por_criterio.contar(elegidas, etiquetas), catalogo, repeticiones=1)
+    inv = res["por_criterio"]["INV-005"]["skill"]
+    assert (inv["anotador"], inv["marca"], inv["precision"], inv["exhaustividad"], inv["f1"]) == (2, 2, 1.0, 1.0, 1.0)
+    dor = res["por_criterio"]["DOR-001"]["skill"]
+    assert (dor["anotador"], dor["marca"], dor["precision"], dor["exhaustividad"], dor["f1"]) == (1, 1, 0.0, 0.0, 0.0)
+    assert res["por_criterio"]["DOR-001"]["base"]["f1"] == 1.0
+    assert res["por_categoria"]["invest"]["base"]["marca"] == 1
+    assert res["por_categoria"]["qus"]["skill"]["f1"] is None
+    assert "| INV-005 | Verificable | 2 |" in por_criterio.informe(res, 1)

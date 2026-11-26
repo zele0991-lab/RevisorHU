@@ -335,3 +335,26 @@ borran: si una cambia, se agrega una entrada nueva que la reemplaza y se indica 
 - **Ajustes después del piloto (no cambian lo que ve el modelo):** el cliente del SDK se cierra al terminar cada ejecución (avisos "Event loop is closed"); `estado_git` ya no cuenta lo que está bajo `trazas/`, porque la propia traza recién creada marcaba todas las ejecuciones "con cambios" (las 10 del piloto lo registran así, aunque `ejecutar.py` verificó que no había cambios antes de empezar); el costo por HU se muestra con 4 decimales.
 - **Consecuencias:** el piloto y la corrida completa necesitan la confirmación del responsable. Las trazas simuladas y sus métricas van a `trazas/desarrollo/` (no se versionan).
 
+
+## D-038 · Sin adjudicación de defectos; un solo anotador no especialista como limitación
+- **Fecha:** 2026-11-25
+- **Contexto:** con los resultados de F6, el agente coincide con el anotador en la decisión en el 72–83 % de los casos (Skill 83,3 % y base 75,0 % en el genérico; 75,9 % y 72,2 % en el bancario), pero marca bastantes más defectos. Por repetición, en el genérico el anotador marcó 116, la Skill 162 (+40 %) y la base 146 (+26 %). En el bancario, el anotador 51, la Skill 150 (+194 %) y la base 86 (+68 %). La diferencia se concentra en criterios de juicio: DOR-002, DOR-001, QUS-006, DOR-003, INV-002, BM-006 y BM-010. Se propuso adjudicar los pares (HU, criterio) que el agente marca y el anotador no: 132 en el genérico y 157 en el bancario, o una muestra de 40.
+- **Decisión:**
+  - **No se adjudica.** El responsable ya dedicó una jornada al etiquetado. Las etiquetas finales no cambian y las métricas quedan como están.
+  - **Las etiquetas del anotador siguen siendo la referencia de todas las métricas.** Skill y línea base se comparan siempre contra ellas, no entre sí.
+  - **Se declara como limitación general:** un solo anotador, sin formación especializada en ingeniería de requerimientos. Afecta a todas las métricas, no solo a los defectos.
+  - **Redacción en el artículo:** la diferencia en defectos es *consistente con* la hipótesis de que el agente detecta defectos que un revisor no especialista omite. No la *demuestra*: sin adjudicación no se descarta que parte de ellos sean falsos positivos. La adjudicación por un especialista queda como trabajo futuro.
+- **Perfil del anotador:** experiencia profesional en pruebas de software y automatización de pruebas.
+- **Análisis exploratorio por criterio** (`experimentos/por_criterio.py`, escribe `resultados/acuerdo_por_criterio.md` y `.json`). Con los dos conjuntos juntos y las 3 repeticiones, el F1 de la Skill es 0,75 en INVEST (base 0,68), 0,41 en QUS, 0,32 en Banca Móvil y 0,22 en DoR. Por criterio, *Verificable* (INV-005) tiene F1 0,93 en las dos configuraciones. En el otro extremo, el anotador marcó 1 en DOR-001 y el agente 26; en BM-006 y BM-010 el anotador marcó 0 y el agente unos 10. A la inversa, el anotador es más estricto en QUS-001 y en INV-004. Es consistente con el perfil de pruebas del anotador, pero la pregunta surgió después de ver los resultados: no confirma la hipótesis ni distingue omisiones de exceso de rigor.
+- **Consecuencias:** el análisis de defectos de más va en Discusión y Limitaciones, con las cifras de arriba y una tabla por categoría (no la de los 27 criterios). Por decisión del responsable, la traducción de apoyo (D-035) no se menciona entre las limitaciones del artículo.
+
+## D-039 · El poller solo toma las HU marcadas "para-revision"
+- **Fecha:** 2026-11-25
+- **Contexto:** redactar una HU en Azure DevOps toma varios minutos, y el work item existe desde el primer guardado. El poller tomaba toda User Story sin `ia-revisada`. Al responsable le pasó que el poller revisó una HU con la descripción escrita pero todavía sin criterios de aceptación. Se evaluó un tiempo de reposo: revisar solo las HU sin cambios en los últimos N minutos. Se descartó porque en la demo obliga a esperar y no garantiza que la HU esté terminada.
+- **Decisión:**
+  - Opción nueva en `config/azure_devops.json`: `poller.requerir_etiqueta_para_revision`, activa (`true`), con la etiqueta `etiquetas.para_revision` = `para-revision`.
+  - Activa la opción, la consulta WIQL de `listar_pendientes` exige `[System.Tags] CONTAINS 'para-revision'`, además de no tener `ia-revisada` y de la ventana de días.
+  - El analista agrega la etiqueta cuando terminó de redactar. Es una señal explícita de "lista para revisión", en línea con la *Definition of Ready*.
+  - El conector no quita `para-revision` después de revisar: lo que impide revisar dos veces sigue siendo `ia-revisada` más el registro de procesadas. La única escritura de campos sigue siendo agregar etiquetas.
+  - Si la opción está activa y falta la etiqueta en la configuración, falla antes de llamar a Azure DevOps.
+- **Consecuencias:** las HU ya creadas sin la etiqueta no se revisan hasta que alguien la agregue. Para la demo, crear la HU en `RevisorHU-Pruebas\BancaMovil`, completar descripción y *Acceptance Criteria*, y al final agregar `para-revision`. Volver a revisar una HU ya revisada sigue exigiendo quitar `ia-revisada` y su entrada en `estado/azure_procesados.json`.
