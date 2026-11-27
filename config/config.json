@@ -1,8 +1,9 @@
 {
   "_lectura": "Configuración del agente. Las dos configuraciones del experimento (skill y base) comparten TODO excepto el archivo de 'prompts'. Las rutas son relativas a la raíz del repositorio.",
-  "modelo": "claude-opus-5-5",
+  "modelo": "claude-haiku-5-5",
   "effort": "medium",
-  "fallbacks": "default",
+  "_fallbacks": "Haiku 5.5 no admite fallbacks del servidor (una lista devuelve 400). Si respondiera otro modelo, la traza queda 'contaminada' (D-040).",
+  "fallbacks": null,
   "max_tokens_por_respuesta": 16000,
   "limites": {
     "max_pasos": 15,
@@ -23,12 +24,12 @@
   "guion_simulado": "datos/guiones/guion_simulado.json",
   "carpeta_trazas": "trazas/desarrollo",
   "carpeta_estado": "estado",
-  "_precios": "USD por millón de tokens de claude-opus-5-5 (skill claude-api, consultada el 2026-11-09). La escritura en caché de 5 minutos cuesta 1,25 veces la entrada. Solo se usan para estimar costos; la factura real manda.",
+  "_precios": "USD por millón de tokens de claude-haiku-5-5 con prompts de 100K tokens o menos (skill claude-api, consultada el 2026-11-25): lectura de caché 0,1 veces la entrada y escritura de 5 minutos 1,25 veces. Solo sirven para estimar; la factura real manda.",
   "precios_usd_por_millon": {
-    "entrada": 4.0,
-    "salida": 20.0,
-    "cache_lectura": 0.20,
-    "cache_escritura": 5.0
+    "entrada": 0.10,
+    "salida": 0.50,
+    "cache_lectura": 0.01,
+    "cache_escritura": 0.125
   },
   "servidores": [
     {

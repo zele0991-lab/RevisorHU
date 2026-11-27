@@ -204,5 +204,5 @@ def test_modo_real_marca_como_contaminada_una_respuesta_de_otro_modelo(tmp_path,
     monkeypatch.setattr(bucle, "ModeloClaude", lambda *a, **k: ModeloClaude(*a, **k, cliente=cliente))
     r, ev = _ejecutar(tmp_path, simulado=False)
     assert r.contaminada and ev[-1]["fallback_usado"] and ev[-1]["modelo_respondio"] == ["claude-opus-4-8"]
-    assert ev[0]["modelo"] == "claude-opus-5-5" and ev[0]["effort"] == "medium"
-    assert ev[-1]["costo_usd_estimado"] == pytest.approx((100 * 4 + 10 * 20 + 900 * 5) / 1e6)
+    assert ev[0]["modelo"] == "claude-haiku-5-5" and ev[0]["effort"] == "medium"
+    assert ev[-1]["costo_usd_estimado"] == pytest.approx(round((100 * 0.10 + 10 * 0.50 + 900 * 0.125) / 1e6, 4))

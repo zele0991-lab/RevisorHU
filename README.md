@@ -53,7 +53,7 @@ Desde la raíz del repositorio, con el entorno virtual activo:
 # Sin clave ni costo: un guion reemplaza al modelo (muestra el bucle, la política y la traza)
 revisar --caso HU-002 --config base --simulado
 
-# Modelo real (claude-opus-5-5): cuesta dinero, alrededor de US$0,15–0,35 por HU
+# Modelo real (claude-haiku-5-5): cuesta dinero, menos de US$0,01 por HU
 revisar --caso HU-002 --config base
 ```
 
@@ -122,7 +122,7 @@ Configuración (la organización de prueba se crea con `docs/GUIA_AZURE_DEVOPS.m
 # Simulado: un guion reemplaza al modelo (sin costo), pero lee y ESCRIBE de verdad en Azure DevOps
 python -m revisor.integracion.poller_azure --una-vez
 
-# Real: cuesta dinero, alrededor de US$0,15–0,25 por HU; --max-hu limita cuántas HU revisa
+# Real: cuesta dinero, menos de US$0,01 por HU con Haiku 5.5; --max-hu limita cuántas HU revisa
 python -m revisor.integracion.poller_azure --una-vez --real --max-hu 1
 
 # Sin --una-vez queda corriendo y revisa cada 15 minutos; se detiene con Ctrl+C

@@ -358,3 +358,17 @@ borran: si una cambia, se agrega una entrada nueva que la reemplaza y se indica 
   - El conector no quita `para-revision` después de revisar: lo que impide revisar dos veces sigue siendo `ia-revisada` más el registro de procesadas. La única escritura de campos sigue siendo agregar etiquetas.
   - Si la opción está activa y falta la etiqueta en la configuración, falla antes de llamar a Azure DevOps.
 - **Consecuencias:** las HU ya creadas sin la etiqueta no se revisan hasta que alguien la agregue. Para la demo, crear la HU en `RevisorHU-Pruebas\BancaMovil`, completar descripción y *Acceptance Criteria*, y al final agregar `para-revision`. Volver a revisar una HU ya revisada sigue exigiendo quitar `ia-revisada` y su entrada en `estado/azure_procesados.json`.
+
+## D-040 · Haiku 5.5 en todo el proyecto
+- **Fecha:** 2026-11-26
+- **Contexto:** el experimento de F6 se corrió con Claude Haiku 5.5 (D-033), pero el uso normal (`config/config.json`) y el poller de Azure DevOps (`config/config_azure.json`) seguían con Claude Opus 5.5. El artículo habría evaluado un modelo distinto del que se entrega y se muestra en la demo.
+- **Decisión:**
+  - `config/config.json` y `config/config_azure.json` pasan a `claude-haiku-5-5`, con `fallbacks: null` (Haiku 5.5 rechaza los fallbacks del servidor) y los precios de Haiku, igual que `config/experimento.json`.
+  - Opus 5.5 no se usa en ninguna configuración. El código sigue aceptando cualquier modelo y `fallbacks`; solo cambian los valores.
+  - No cambian la Skill, el catálogo, los datos ni las etiquetas congelados en `experimento-v1`, ni las trazas ya generadas.
+- **Consecuencias:**
+  - Las cifras del artículo describen el mismo modelo que corre en Azure DevOps. Cada HU real cuesta menos de US$0,01, frente a US$0,15–0,25 con Opus.
+  - Sin modelo de respaldo: si Haiku falla o responde otro modelo, la traza se marca y la HU se vuelve a revisar.
+  - Las ejecuciones reales anteriores en Azure DevOps (D-032) se hicieron con Opus 5.5 y siguen reportándose como demostración, no como resultado.
+  - Si Opus 5.5 rinde mejor no se midió: queda como trabajo futuro del artículo.
+

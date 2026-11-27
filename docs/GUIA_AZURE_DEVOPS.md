@@ -98,7 +98,7 @@ python -m revisor.integracion.poller_azure --una-vez
   `ia-<decisión>`, y que su **estado no haya cambiado**.
 - La traza queda en `trazas/azure/`.
 
-El modo real (`--real`) llama al modelo y cuesta unos US$0,15–0,25 por HU. Está en pausa (D-028) hasta
+El modo real (`--real`) llama al modelo y cuesta menos de US$0,01 por HU con Haiku 5.5 (D-040; con Opus 5.5 eran unos US$0,15–0,25). Está en pausa (D-028) hasta
 que lo autorices.
 
 ## 8. Volver a Claude Code
